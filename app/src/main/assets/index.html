@@ -6,68 +6,291 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#090d18">
 <title>S1MPLE OS</title>
+
 <style>
-:root{--bg:#090d18;--panel:rgba(17,25,43,.78);--line:rgba(255,255,255,.12);--txt:#f3f6ff;--muted:#9aa8c3;--accent:#f5b942}
+:root{
+    --bg:#090d18;
+    --panel:rgba(17,25,43,.78);
+    --line:rgba(255,255,255,.12);
+    --txt:#f3f6ff;
+    --muted:#9aa8c3;
+    --accent:#f5b942;
+}
+
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(ellipse at 75% 15%,#23365b 0,transparent 40%),radial-gradient(ellipse at 15% 85%,#173a43 0,transparent 45%),var(--bg);color:var(--txt);font:15px system-ui,-apple-system,sans-serif;height:100dvh;overflow:hidden}
-.desktop{height:100%;padding:24px 18px 88px;display:flex;flex-direction:column}
-.brand{font-size:12px;letter-spacing:4px;color:var(--muted);font-weight:700}
-.hero{margin:auto 0;text-align:center}
-.logo{font-size:clamp(42px,12vw,68px);font-weight:850;letter-spacing:-4px}
+
+body{
+    margin:0;
+    background:
+        radial-gradient(ellipse at 75% 15%,#23365b 0,transparent 40%),
+        radial-gradient(ellipse at 15% 85%,#173a43 0,transparent 45%),
+        var(--bg);
+    color:var(--txt);
+    font:15px system-ui,-apple-system,sans-serif;
+    height:100dvh;
+    overflow:hidden;
+}
+
+.desktop{
+    height:100%;
+    padding:24px 18px 88px;
+    display:flex;
+    flex-direction:column;
+}
+
+.brand{
+    font-size:12px;
+    letter-spacing:4px;
+    color:var(--muted);
+    font-weight:700;
+}
+
+.hero{
+    margin:auto 0;
+    text-align:center;
+}
+
+.logo{
+    font-size:clamp(42px,12vw,68px);
+    font-weight:850;
+    letter-spacing:-4px;
+}
+
 .logo span{color:var(--accent)}
-.sub{color:var(--muted);letter-spacing:2px;font-size:11px}
-.clock{font-size:34px;font-weight:300;margin-top:22px}
-.date{color:var(--muted);font-size:13px}
-.apps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:25px auto 0;width:min(100%,430px)}
-.app{border:1px solid var(--line);background:var(--panel);border-radius:18px;padding:16px 8px;text-align:center;backdrop-filter:blur(16px);min-height:92px}
-.ico{font-size:25px;display:block;margin-bottom:7px}
-.app small{font-size:12px;color:#dce5f8}
-.dock{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;padding:9px;background:rgba(13,20,35,.82);border:1px solid var(--line);border-radius:20px;backdrop-filter:blur(20px);max-width:calc(100% - 24px)}
-.dock button{border:0;background:transparent;color:white;font-size:23px;width:42px;height:42px;border-radius:13px}
-.dock button:active,.app:active{background:#35445f}
-.window{position:absolute;inset:14px 10px 76px;background:rgba(12,18,31,.96);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(20px);display:none;overflow:hidden;box-shadow:0 20px 70px #0009}
-.winhead{height:58px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);font-weight:700}
-.close{background:#29364e;border:0;color:white;border-radius:10px;padding:8px 12px}
-.content{padding:18px;overflow:auto;height:calc(100% - 58px)}
-.tile{padding:15px;background:#19243a;border:1px solid var(--line);border-radius:14px;margin-bottom:10px}
+
+.sub{
+    color:var(--muted);
+    letter-spacing:2px;
+    font-size:11px;
+}
+
+.clock{
+    font-size:34px;
+    font-weight:300;
+    margin-top:22px;
+}
+
+.date{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.apps{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin:25px auto 0;
+    width:min(100%,430px);
+}
+
+.app{
+    border:1px solid var(--line);
+    background:var(--panel);
+    border-radius:18px;
+    padding:16px 8px;
+    text-align:center;
+    backdrop-filter:blur(16px);
+    min-height:92px;
+}
+
+.ico{
+    font-size:25px;
+    display:block;
+    margin-bottom:7px;
+}
+
+.app small{
+    font-size:12px;
+    color:#dce5f8;
+}
+
+.dock{
+    position:absolute;
+    bottom:14px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:8px;
+    padding:9px;
+    background:rgba(13,20,35,.82);
+    border:1px solid var(--line);
+    border-radius:20px;
+    backdrop-filter:blur(20px);
+    max-width:calc(100% - 24px);
+}
+
+.dock button{
+    border:0;
+    background:transparent;
+    color:white;
+    font-size:23px;
+    width:42px;
+    height:42px;
+    border-radius:13px;
+}
+
+.dock button:active,
+.app:active{
+    background:#35445f;
+}
+
+.window{
+    position:absolute;
+    inset:14px 10px 76px;
+    background:rgba(12,18,31,.96);
+    border:1px solid var(--line);
+    border-radius:22px;
+    backdrop-filter:blur(20px);
+    display:none;
+    overflow:hidden;
+    box-shadow:0 20px 70px #0009;
+}
+
+.winhead{
+    height:58px;
+    padding:0 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid var(--line);
+    font-weight:700;
+}
+
+.close{
+    background:#29364e;
+    border:0;
+    color:white;
+    border-radius:10px;
+    padding:8px 12px;
+}
+
+.content{
+    padding:18px;
+    overflow:auto;
+    height:calc(100% - 58px);
+}
+
+.tile{
+    padding:15px;
+    background:#19243a;
+    border:1px solid var(--line);
+    border-radius:14px;
+    margin-bottom:10px;
+}
+
 .muted{color:var(--muted)}
-input,select{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);background:#101a2b;color:white;margin:8px 0}
-button.action{padding:11px 14px;background:#dba83d;color:#151a24;border:0;border-radius:11px;font-weight:700}
-pre{white-space:pre-wrap;color:#bde6c9;background:#080d15;padding:14px;border-radius:12px;min-height:130px}
-.switch{float:right;accent-color:#e7b34b}
-.file{display:flex;gap:12px;align-items:center}
+
+input,select{
+    width:100%;
+    padding:13px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:#101a2b;
+    color:white;
+    margin:8px 0;
+}
+
+button.action{
+    padding:11px 14px;
+    background:#dba83d;
+    color:#151a24;
+    border:0;
+    border-radius:11px;
+    font-weight:700;
+}
+
+pre{
+    white-space:pre-wrap;
+    color:#bde6c9;
+    background:#080d15;
+    padding:14px;
+    border-radius:12px;
+    min-height:130px;
+}
+
+.switch{
+    float:right;
+    accent-color:#e7b34b;
+}
+
+.file{
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
 .file b{font-size:20px}
 </style>
 </head>
+
 <body>
+
 <div class="desktop">
-<div class="brand">S1MPLE OS <span style="color:var(--accent)">/ ALPHA 1.0</span></div>
-<div class="hero">
-<div class="logo">S1MPLE<span>.</span></div>
-<div class="sub" id="slogan"></div>
-<div class="clock" id="clock">00:00</div>
-<div class="date" id="date"></div>
-<div class="apps">
-<div class="app" onclick="openApp('Files')"><span class="ico">📁</span><small data-i18n="files">Files</small></div>
-<div class="app" onclick="openApp('Browser')"><span class="ico">🌐</span><small data-i18n="browser">Browser</small></div>
-<div class="app" onclick="openApp('Settings')"><span class="ico">⚙️</span><small data-i18n="settings">Settings</small></div>
-<div class="app" onclick="openApp('Gallery')"><span class="ico">🖼️</span><small data-i18n="gallery">Gallery</small></div>
-<div class="app" onclick="openApp('Terminal')"><span class="ico">⌨️</span><small data-i18n="terminal">Terminal</small></div>
-<div class="app" onclick="openApp('About')"><span class="ico">ⓘ</span><small data-i18n="about">About</small></div>
-</div>
-</div>
+
+    <div class="brand">
+        S1MPLE OS <span style="color:var(--accent)">/ ALPHA 1.0</span>
+    </div>
+
+    <div class="hero">
+
+        <div class="logo">S1MPLE<span>.</span></div>
+
+        <div class="sub" id="slogan"></div>
+
+        <div class="clock" id="clock">00:00</div>
+        <div class="date" id="date"></div>
+
+        <div class="apps">
+
+            <div class="app" onclick="openApp('Files')">
+                <span class="ico">📁</span>
+                <small data-i18n="files">Files</small>
+            </div>
+
+            <div class="app" onclick="openApp('Browser')">
+                <span class="ico">🌐</span>
+                <small data-i18n="browser">Browser</small>
+            </div>
+
+            <div class="app" onclick="openApp('Settings')">
+                <span class="ico">⚙️</span>
+                <small data-i18n="settings">Settings</small>
+            </div>
+
+            <div class="app" onclick="openApp('Gallery')">
+                <span class="ico">🖼️</span>
+                <small data-i18n="gallery">Gallery</small>
+            </div>
+
+            <div class="app" onclick="openApp('Terminal')">
+                <span class="ico">⌨️</span>
+                <small data-i18n="terminal">Terminal</small>
+            </div>
+
+            <div class="app" onclick="openApp('About')">
+                <span class="ico">ⓘ</span>
+                <small data-i18n="about">About</small>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <div class="dock">
-<button onclick="openApp('Files')">📁</button>
-<button onclick="openApp('Browser')">🌐</button>
-<button onclick="openApp('Settings')">⚙️</button>
-<button onclick="openApp('Terminal')">⌨️</button>
+    <button onclick="openApp('Files')">📁</button>
+    <button onclick="openApp('Browser')">🌐</button>
+    <button onclick="openApp('Settings')">⚙️</button>
+    <button onclick="openApp('Terminal')">⌨️</button>
 </div>
 
 <div class="window" id="win">
-<div class="winhead"><span id="title">App</span><button class="close" onclick="closeApp()">✕</button></div>
-<div class="content" id="content"></div>
+
+    <div class="winhead">
+        <span id="title">App</span>
+        <button class="close" onclick="closeApp()">✕</button>
+    </div>
+
+    <div class="content" id="content"></div>
+
 </div>
 
 <script>
@@ -79,200 +302,429 @@ let currentApp = null;
 
 const supportedLanguages = ["en","ru","uk"];
 
+
+/* LANGUAGE DETECTION */
+
 function detectLanguage(){
+
     try{
         const saved = localStorage.getItem("simpleos-language");
+
         if(saved === "auto" || saved === null){
-            const native = window.S1MPLENative?.getLanguage?.();
-            if(["en","ru","uk"].includes(native)) return native;
-
-            const device = navigator.languages?.[0] || navigator.language || "en";
-            const code = device.toLowerCase().split("-")[0];
-            return supportedLanguages.includes(code) ? code : "en";
+            return detectDeviceLanguage();
         }
-        return saved;
-    }catch(e){
+
+        if(supportedLanguages.includes(saved)){
+            return saved;
+        }
+
         return "en";
-    }
-}
 
-async function loadLanguage(code){
-    if(!supportedLanguages.includes(code)) code = "en";
-
-    try{
-        const response = await fetch("languages/" + code + ".json");
-        if(!response.ok) throw new Error("Language file not found");
-
-        const data = await response.json();
-
-        const fallback = translations.en || {};
-        lang = code;
-        translations[code] = data;
-
-        document.documentElement.lang = code;
-        applyTranslations();
-
-        if(currentApp) openApp(currentApp);
-        tick();
     }catch(error){
-        console.error("Language loading failed:", error);
-        if(code !== "en") await loadLanguage("en");
+        return detectDeviceLanguage();
     }
 }
 
-function t(key){
-    return translations[lang]?.[key] ?? translations.en?.[key] ?? key;
-}
-
-function applyTranslations(){
-    document.querySelectorAll("[data-i18n]").forEach(el=>{
-        el.textContent = t(el.dataset.i18n);
-    });
-    $("slogan").textContent = t("slogan");
-}
-
-function tick(){
-    const d = new Date();
-    const locale = lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-US";
-    $("clock").textContent = d.toLocaleTimeString(locale,{hour:"2-digit",minute:"2-digit"});
-    $("date").textContent = d.toLocaleDateString(locale,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-}
-
-async function init(){
-    const initial = detectLanguage();
-
-    // Load English first as fallback.
-    try{
-        const response = await fetch("languages/en.json");
-        translations.en = await response.json();
-    }catch(e){
-        console.error("English language file missing",e);
-    }
-
-    await loadLanguage(initial);
-    tick();
-    setInterval(tick,1000);
-}
-
-function openApp(name){
-    currentApp = name;
-    $("title").textContent = t(name.toLowerCase());
-    $("win").style.display = "block";
-    const c = $("content");
-
-    const pages = {
-        Files:`
-        <div class="tile file"><b>📁</b><div><strong>${t("documents")}</strong><div class="muted">${t("folder")}</div></div></div>
-        <div class="tile file"><b>🖼️</b><div><strong>${t("pictures")}</strong><div class="muted">${t("folder")}</div></div></div>
-        <div class="tile file"><b>⬇️</b><div><strong>${t("downloads")}</strong><div class="muted">${t("folder")}</div></div></div>
-        <p class="muted">${t("fileDemo")}</p>`,
-
-        Browser:`
-        <p class="muted">${t("browserPreview")}</p>
-        <input id="url" placeholder="${t("searchPlaceholder")}">
-        <button class="action" onclick="searchWeb()">${t("open")}</button>
-        <div id="browserMsg" class="tile" style="margin-top:14px">${t("browserHint")}</div>`,
-
-        Settings:`
-        <div class="tile">${t("appearance")} <span class="muted"> · ${t("dark")}</span></div>
-        <div class="tile">${t("accent")} <span style="color:var(--accent)">● ${t("gold")}</span></div>
-        <div class="tile">${t("version")} <span class="muted">1.0 Alpha</span></div>
-        <div class="tile">${t("systemStatus")} <span style="color:#8bd5a6">● ${t("running")}</span></div>
-        <div class="tile"><strong>${t("language")}</strong>
-        <select id="languageSelect" onchange="changeLanguage(this.value)">
-        <option value="auto">${t("autoLanguage")}</option>
-        <option value="en">English</option>
-        <option value="ru">Русский</option>
-        <option value="uk">Українська</option>
-        </select></div>`,
-
-        Gallery:`
-        <div class="tile">🖼️ ${t("galleryReady")}</div>
-        <p class="muted">${t("galleryPlan")}</p>`,
-
-        Terminal:`
-        <p class="muted">${t("shell")}</p>
-        <pre id="out">${t("terminalStart")}</pre>
-        <input id="cmd" placeholder="${t("commandPlaceholder")}" onkeydown="if(event.key==='Enter')runCmd()">
-        <button class="action" onclick="runCmd()">${t("run")}</button>`,
-
-        About:`
-        <div class="logo" style="font-size:38px">S1MPLE<span>.</span></div>
-        <p>${t("yourRules")}</p>
-        <div class="tile">${t("aboutDescription")}</div>
-        <p class="muted">${t("build")}</p>`
-    };
-
-    c.innerHTML = pages[name] || "";
-    if(name === "Settings"){
-        const select = $("languageSelect");
-        select.value = localStorage.getItem("simpleos-language") || "auto";
-    }
-}
-
-async function changeLanguage(code){
-    try{
-        localStorage.setItem("simpleos-language",code);
-    }catch(e){}
-    const actual = code === "auto" ? detectDeviceLanguage() : code;
-    await loadLanguage(actual);
-}
 
 function detectDeviceLanguage(){
+
     try{
         const native = window.S1MPLENative?.getLanguage?.();
-        if(["en","ru","uk"].includes(native)) return native;
-    }catch(e){}
-    const device = navigator.languages?.[0] || navigator.language || "en";
+
+        if(supportedLanguages.includes(native)){
+            return native;
+        }
+
+    }catch(error){
+        console.warn("Native language detection unavailable",error);
+    }
+
+    const device = navigator.languages?.[0]
+        || navigator.language
+        || "en";
+
     const code = device.toLowerCase().split("-")[0];
+
     return supportedLanguages.includes(code) ? code : "en";
 }
 
+
+/* TRANSLATIONS */
+
+async function loadLanguage(code){
+
+    if(!supportedLanguages.includes(code)){
+        code = "en";
+    }
+
+    try{
+
+        if(!window.S1MPLENative ||
+           typeof window.S1MPLENative.getTranslations !== "function"){
+            throw new Error("Android language bridge unavailable");
+        }
+
+        const json = window.S1MPLENative.getTranslations(code);
+        const data = JSON.parse(json);
+
+        translations[code] = data;
+        lang = code;
+
+        document.documentElement.lang = code;
+
+        applyTranslations();
+
+        if(currentApp){
+            openApp(currentApp);
+        }
+
+        tick();
+
+    }catch(error){
+
+        console.error("Language loading failed:",error);
+
+        if(code !== "en"){
+            await loadLanguage("en");
+        }
+    }
+}
+
+
+function t(key){
+
+    return translations[lang]?.[key]
+        ?? translations.en?.[key]
+        ?? key;
+}
+
+
+function applyTranslations(){
+
+    document.querySelectorAll("[data-i18n]").forEach(el=>{
+        el.textContent = t(el.dataset.i18n);
+    });
+
+    $("slogan").textContent = t("slogan");
+}
+
+
+/* CLOCK */
+
+function tick(){
+
+    const d = new Date();
+
+    const locale =
+        lang === "uk" ? "uk-UA" :
+        lang === "ru" ? "ru-RU" :
+        "en-US";
+
+    $("clock").textContent = d.toLocaleTimeString(locale,{
+        hour:"2-digit",
+        minute:"2-digit"
+    });
+
+    $("date").textContent = d.toLocaleDateString(locale,{
+        weekday:"long",
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+    });
+}
+
+
+/* INITIALIZATION */
+
+async function init(){
+
+    try{
+
+        translations.en = JSON.parse(
+            window.S1MPLENative.getTranslations("en")
+        );
+
+    }catch(error){
+
+        console.error("English language loading failed:",error);
+    }
+
+    await loadLanguage(detectLanguage());
+
+    tick();
+
+    setInterval(tick,1000);
+}
+
+
+/* APPLICATIONS */
+
+function openApp(name){
+
+    currentApp = name;
+
+    $("title").textContent = t(name.toLowerCase());
+
+    $("win").style.display = "block";
+
+    const c = $("content");
+
+    const pages = {
+
+        Files:`
+
+        <div class="tile file">
+            <b>📁</b>
+            <div>
+                <strong>${t("documents")}</strong>
+                <div class="muted">${t("folder")}</div>
+            </div>
+        </div>
+
+        <div class="tile file">
+            <b>🖼️</b>
+            <div>
+                <strong>${t("pictures")}</strong>
+                <div class="muted">${t("folder")}</div>
+            </div>
+        </div>
+
+        <div class="tile file">
+            <b>⬇️</b>
+            <div>
+                <strong>${t("downloads")}</strong>
+                <div class="muted">${t("folder")}</div>
+            </div>
+        </div>
+
+        <p class="muted">${t("fileDemo")}</p>
+
+        `,
+
+
+        Browser:`
+
+        <p class="muted">${t("browserPreview")}</p>
+
+        <input id="url" placeholder="${t("searchPlaceholder")}">
+
+        <button class="action" onclick="searchWeb()">
+            ${t("open")}
+        </button>
+
+        <div id="browserMsg" class="tile" style="margin-top:14px">
+            ${t("browserHint")}
+        </div>
+
+        `,
+
+
+        Settings:`
+
+        <div class="tile">
+            ${t("appearance")}
+            <span class="muted"> · ${t("dark")}</span>
+        </div>
+
+        <div class="tile">
+            ${t("accent")}
+            <span style="color:var(--accent)">● ${t("gold")}</span>
+        </div>
+
+        <div class="tile">
+            ${t("version")}
+            <span class="muted">1.0 Alpha</span>
+        </div>
+
+        <div class="tile">
+            ${t("systemStatus")}
+            <span style="color:#8bd5a6">● ${t("running")}</span>
+        </div>
+
+        <div class="tile">
+
+            <strong>${t("language")}</strong>
+
+            <select id="languageSelect" onchange="changeLanguage(this.value)">
+
+                <option value="auto">${t("autoLanguage")}</option>
+                <option value="en">English</option>
+                <option value="ru">Русский</option>
+                <option value="uk">Українська</option>
+
+            </select>
+
+        </div>
+
+        `,
+
+
+        Gallery:`
+
+        <div class="tile">
+            🖼️ ${t("galleryReady")}
+        </div>
+
+        <p class="muted">${t("galleryPlan")}</p>
+
+        `,
+
+
+        Terminal:`
+
+        <p class="muted">${t("shell")}</p>
+
+        <pre id="out">${t("terminalStart")}</pre>
+
+        <input
+            id="cmd"
+            placeholder="${t("commandPlaceholder")}"
+            onkeydown="if(event.key==='Enter')runCmd()"
+        >
+
+        <button class="action" onclick="runCmd()">
+            ${t("run")}
+        </button>
+
+        `,
+
+
+        About:`
+
+        <div class="logo" style="font-size:38px">
+            S1MPLE<span>.</span>
+        </div>
+
+        <p>${t("yourRules")}</p>
+
+        <div class="tile">
+            ${t("aboutDescription")}
+        </div>
+
+        <p class="muted">${t("build")}</p>
+
+        `
+    };
+
+    c.innerHTML = pages[name] || "";
+
+    if(name === "Settings"){
+
+        const select = $("languageSelect");
+
+        select.value =
+            localStorage.getItem("simpleos-language") || "auto";
+    }
+}
+
+
+/* CHANGE LANGUAGE */
+
+async function changeLanguage(code){
+
+    if(code !== "auto" && !supportedLanguages.includes(code)){
+        return;
+    }
+
+    try{
+        localStorage.setItem("simpleos-language",code);
+    }catch(error){}
+
+    const actual =
+        code === "auto"
+            ? detectDeviceLanguage()
+            : code;
+
+    await loadLanguage(actual);
+}
+
+
+/* CLOSE APPLICATION */
+
 function closeApp(){
+
     $("win").style.display = "none";
+
     currentApp = null;
 }
 
-function searchWeb(){
-    const input = $("url");
-    if(!input) return;
-    const v = input.value.trim();
-    if(!v)return;
 
-    const u = /^https?:\/\//i.test(v) ? v : "https://www.google.com/search?q="+encodeURIComponent(v);
+/* BROWSER */
+
+function searchWeb(){
+
+    const input = $("url");
+
+    if(!input) return;
+
+    const v = input.value.trim();
+
+    if(!v) return;
+
+    const u = /^https?:\/\//i.test(v)
+        ? v
+        : "https://www.google.com/search?q=" + encodeURIComponent(v);
+
     const box = $("browserMsg");
+
     box.textContent = t("browserExternal");
 
     const a = document.createElement("a");
+
     a.href = u;
     a.target = "_blank";
     a.rel = "noopener";
     a.textContent = t("continue");
     a.style.color = "#f5b942";
+
     box.appendChild(a);
 }
 
+
+/* TERMINAL */
+
 function runCmd(){
-    const el = $("cmd"),out = $("out");
-    if(!el||!out)return;
+
+    const el = $("cmd");
+    const out = $("out");
+
+    if(!el || !out) return;
 
     const x = el.value.trim();
+
     let r = {
+
         help:t("help"),
+
         whoami:t("whoami"),
-        date:new Date().toLocaleString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-US"),
+
+        date:new Date().toLocaleString(
+            lang === "uk" ? "uk-UA" :
+            lang === "ru" ? "ru-RU" :
+            "en-US"
+        ),
+
         clear:""
-    }[x] ?? (t("notFound")+x);
+
+    }[x] ?? (t("notFound") + x);
 
     if(x === "clear"){
+
         out.textContent = "";
+
     }else{
-        out.textContent += "\n> "+x+"\n"+r;
+
+        out.textContent += "\n> " + x + "\n" + r;
     }
+
     el.value = "";
 }
 
+
+/* START */
+
 init();
+
 </script>
 </body>
 </html>
