@@ -1,22 +1,256 @@
+
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#090d18"><title>S1MPLE OS</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#090d18">
+<title>S1MPLE OS</title>
 <style>
-:root{--bg:#090d18;--panel:rgba(17,25,43,.78);--line:rgba(255,255,255,.12);--txt:#f3f6ff;--muted:#9aa8c3;--accent:#f5b942}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% 15%,#23365b 0,transparent 40%),radial-gradient(ellipse at 15% 85%,#173a43 0,transparent 45%),var(--bg);color:var(--txt);font:15px system-ui,-apple-system,sans-serif;height:100dvh;overflow:hidden}.desktop{height:100%;padding:24px 18px 88px;display:flex;flex-direction:column}.brand{font-size:12px;letter-spacing:4px;color:var(--muted);font-weight:700}.hero{margin:auto 0;text-align:center}.logo{font-size:clamp(42px,12vw,68px);font-weight:850;letter-spacing:-4px}.logo span{color:var(--accent)}.sub{color:var(--muted);letter-spacing:2px;font-size:11px}.clock{font-size:34px;font-weight:300;margin-top:22px}.date{color:var(--muted);font-size:13px}.apps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:25px auto 0;width:min(100%,430px)}.app{border:1px solid var(--line);background:var(--panel);border-radius:18px;padding:16px 8px;text-align:center;backdrop-filter:blur(16px);min-height:92px}.ico{font-size:25px;display:block;margin-bottom:7px}.app small{font-size:12px;color:#dce5f8}.dock{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;padding:9px;background:rgba(13,20,35,.82);border:1px solid var(--line);border-radius:20px;backdrop-filter:blur(20px);max-width:calc(100% - 24px)}.dock button{border:0;background:transparent;color:white;font-size:23px;width:42px;height:42px;border-radius:13px}.dock button:active,.app:active{background:#35445f}.window{position:absolute;inset:14px 10px 76px;background:rgba(12,18,31,.96);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(20px);display:none;overflow:hidden;box-shadow:0 20px 70px #0009}.winhead{height:58px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);font-weight:700}.close{background:#29364e;border:0;color:white;border-radius:10px;padding:8px 12px}.content{padding:18px;overflow:auto;height:calc(100% - 58px)}.tile{padding:15px;background:#19243a;border:1px solid var(--line);border-radius:14px;margin-bottom:10px}.muted{color:var(--muted)}input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);background:#101a2b;color:white;margin:8px 0}button.action{padding:11px 14px;background:#dba83d;color:#151a24;border:0;border-radius:11px;font-weight:700}pre{white-space:pre-wrap;color:#bde6c9;background:#080d15;padding:14px;border-radius:12px;min-height:130px}.switch{float:right;accent-color:#e7b34b}.file{display:flex;gap:12px;align-items:center}.file b{font-size:20px}
-</style></head><body>
-<div class="desktop"><div class="brand">S1MPLE OS <span style="color:var(--accent)">/ ALPHA 1.0</span></div><div class="hero"><div class="logo">S1MPLE<span>.</span></div><div class="sub">YOUR SPACE. YOUR RULES.</div><div class="clock" id="clock">00:00</div><div class="date" id="date">Loading date</div><div class="apps">
-<div class="app" onclick="openApp('Files')"><span class="ico">📁</span><small>Files</small></div><div class="app" onclick="openApp('Browser')"><span class="ico">🌐</span><small>Browser</small></div><div class="app" onclick="openApp('Settings')"><span class="ico">⚙️</span><small>Settings</small></div><div class="app" onclick="openApp('Gallery')"><span class="ico">🖼️</span><small>Gallery</small></div><div class="app" onclick="openApp('Terminal')"><span class="ico">⌨️</span><small>Terminal</small></div><div class="app" onclick="openApp('About')"><span class="ico">ⓘ</span><small>About</small></div>
-</div></div></div>
-<div class="dock"><button onclick="openApp('Files')">📁</button><button onclick="openApp('Browser')">🌐</button><button onclick="openApp('Settings')">⚙️</button><button onclick="openApp('Terminal')">⌨️</button></div>
-<div class="window" id="win"><div class="winhead"><span id="title">App</span><button class="close" onclick="closeApp()">✕</button></div><div class="content" id="content"></div></div>
+:root{--bg:#090d18;--panel:rgba(17,25,43,.78);--line:rgba(255,255,255,.12);--txt:#f3f6ff;--muted:#9aa8c3;--accent:#f5b942}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 75% 15%,#23365b 0,transparent 40%),radial-gradient(ellipse at 15% 85%,#173a43 0,transparent 45%),var(--bg);color:var(--txt);font:15px system-ui,-apple-system,sans-serif;height:100dvh;overflow:hidden}
+.desktop{height:100%;padding:24px 18px 88px;display:flex;flex-direction:column}
+.brand{font-size:12px;letter-spacing:4px;color:var(--muted);font-weight:700}
+.hero{margin:auto 0;text-align:center}
+.logo{font-size:clamp(42px,12vw,68px);font-weight:850;letter-spacing:-4px}
+.logo span{color:var(--accent)}
+.sub{color:var(--muted);letter-spacing:2px;font-size:11px}
+.clock{font-size:34px;font-weight:300;margin-top:22px}
+.date{color:var(--muted);font-size:13px}
+.apps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:25px auto 0;width:min(100%,430px)}
+.app{border:1px solid var(--line);background:var(--panel);border-radius:18px;padding:16px 8px;text-align:center;backdrop-filter:blur(16px);min-height:92px}
+.ico{font-size:25px;display:block;margin-bottom:7px}
+.app small{font-size:12px;color:#dce5f8}
+.dock{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;padding:9px;background:rgba(13,20,35,.82);border:1px solid var(--line);border-radius:20px;backdrop-filter:blur(20px);max-width:calc(100% - 24px)}
+.dock button{border:0;background:transparent;color:white;font-size:23px;width:42px;height:42px;border-radius:13px}
+.dock button:active,.app:active{background:#35445f}
+.window{position:absolute;inset:14px 10px 76px;background:rgba(12,18,31,.96);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(20px);display:none;overflow:hidden;box-shadow:0 20px 70px #0009}
+.winhead{height:58px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);font-weight:700}
+.close{background:#29364e;border:0;color:white;border-radius:10px;padding:8px 12px}
+.content{padding:18px;overflow:auto;height:calc(100% - 58px)}
+.tile{padding:15px;background:#19243a;border:1px solid var(--line);border-radius:14px;margin-bottom:10px}
+.muted{color:var(--muted)}
+input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);background:#101a2b;color:white;margin:8px 0}
+button.action{padding:11px 14px;background:#dba83d;color:#151a24;border:0;border-radius:11px;font-weight:700}
+pre{white-space:pre-wrap;color:#bde6c9;background:#080d15;padding:14px;border-radius:12px;min-height:130px}
+.switch{float:right;accent-color:#e7b34b}
+.file{display:flex;gap:12px;align-items:center}
+.file b{font-size:20px}
+</style>
+</head>
+<body>
+
+<div class="desktop">
+<div class="brand">S1MPLE OS <span style="color:var(--accent)">/ ALPHA 1.0</span></div>
+<div class="hero">
+<div class="logo">S1MPLE<span>.</span></div>
+<div class="sub" id="slogan">YOUR SPACE. YOUR RULES.</div>
+<div class="clock" id="clock">00:00</div>
+<div class="date" id="date">Loading date</div>
+<div class="apps">
+<div class="app" onclick="openApp('Files')"><span class="ico">📁</span><small data-i18n="files">Files</small></div>
+<div class="app" onclick="openApp('Browser')"><span class="ico">🌐</span><small data-i18n="browser">Browser</small></div>
+<div class="app" onclick="openApp('Settings')"><span class="ico">⚙️</span><small data-i18n="settings">Settings</small></div>
+<div class="app" onclick="openApp('Gallery')"><span class="ico">🖼️</span><small data-i18n="gallery">Gallery</small></div>
+<div class="app" onclick="openApp('Terminal')"><span class="ico">⌨️</span><small data-i18n="terminal">Terminal</small></div>
+<div class="app" onclick="openApp('About')"><span class="ico">ⓘ</span><small data-i18n="about">About</small></div>
+</div>
+</div>
+</div>
+
+<div class="dock">
+<button onclick="openApp('Files')">📁</button>
+<button onclick="openApp('Browser')">🌐</button>
+<button onclick="openApp('Settings')">⚙️</button>
+<button onclick="openApp('Terminal')">⌨️</button>
+</div>
+
+<div class="window" id="win">
+<div class="winhead"><span id="title">App</span><button class="close" onclick="closeApp()">✕</button></div>
+<div class="content" id="content"></div>
+</div>
+
 <script>
-const $=id=>document.getElementById(id);function tick(){let d=new Date();$('clock').textContent=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});$('date').textContent=d.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}tick();setInterval(tick,1000);
-function openApp(name){$('title').textContent=name;$('win').style.display='block';let c=$('content');let pages={
-Files:`<div class="tile file"><b>📁</b><div><strong>Documents</strong><div class="muted">Folder</div></div></div><div class="tile file"><b>🖼️</b><div><strong>Pictures</strong><div class="muted">Folder</div></div></div><div class="tile file"><b>⬇️</b><div><strong>Downloads</strong><div class="muted">Folder</div></div></div><p class="muted">Local demo file manager. Android storage access will be added later.</p>`,
-Browser:`<p class="muted">S1MPLE Browser preview</p><input id="url" placeholder="Search or enter address"><button class="action" onclick="searchWeb()">Open</button><div id="browserMsg" class="tile" style="margin-top:14px">Enter a website address or search phrase.</div>`,
-Settings:`<div class="tile">Appearance <span class="muted"> · Dark</span><input class="switch" type="checkbox" checked disabled></div><div class="tile">Accent color <span style="color:var(--accent)">● Gold</span></div><div class="tile">Version <span class="muted">1.0 Alpha</span></div><div class="tile">System status <span style="color:#8bd5a6">● Running</span></div>`,
-Gallery:`<div class="tile">🖼️ Gallery is ready for its first pictures.</div><p class="muted">Photo picker integration is planned for a later build.</p>`,
-Terminal:`<p class="muted">S1MPLE Shell · safe demo commands: help, date, clear, whoami</p><pre id="out">S1MPLE OS [Version 1.0-alpha]\nType 'help' to see commands.</pre><input id="cmd" placeholder="Enter command" onkeydown="if(event.key==='Enter')runCmd()"><button class="action" onclick="runCmd()">Run</button>`,
-About:`<div class="logo" style="font-size:38px">S1MPLE<span>.</span></div><p>Your space. Your rules.</p><div class="tile">S1MPLE OS is an Android launcher-style desktop concept.</div><p class="muted">Build 1.0-alpha · Made for experimentation</p>`};c.innerHTML=pages[name]||''}
-function closeApp(){$('win').style.display='none'}function searchWeb(){let v=$('url').value.trim();if(!v)return;let u=/^https?:\/\//i.test(v)?v:'https://www.google.com/search?q='+encodeURIComponent(v);let box=$('browserMsg');box.textContent='External pages open in your browser for this alpha build. ';let a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';a.textContent='Continue';a.style.color='#f5b942';box.appendChild(a)}
-function runCmd(){let el=$('cmd'),out=$('out');if(!el||!out)return;let x=el.value.trim(),r={help:'Available commands: help, date, whoami, clear',whoami:'guest@s1mple-os',date:new Date().toString(),clear:''}[x]??('Command not found: '+x);out.textContent+='\n> '+x+(x==='clear'?'':'\n'+r);el.value='';}
-</script></body></html>
+const translations = {
+en: {
+files:"Files",browser:"Browser",settings:"Settings",gallery:"Gallery",terminal:"Terminal",about:"About",
+slogan:"YOUR SPACE. YOUR RULES.",folder:"Folder",documents:"Documents",pictures:"Pictures",downloads:"Downloads",
+fileDemo:"Local demo file manager. Android storage access will be added later.",
+browserPreview:"S1MPLE Browser preview",searchPlaceholder:"Search or enter address",open:"Open",
+browserHint:"Enter a website address or search phrase.",
+browserExternal:"External pages open in your browser for this alpha build. ",
+continue:"Continue",
+appearance:"Appearance",dark:"Dark",accent:"Accent color",gold:"Gold",version:"Version",
+systemStatus:"System status",running:"Running",
+galleryReady:"Gallery is ready for its first pictures.",
+galleryPlan:"Photo picker integration is planned for a later build.",
+shell:"S1MPLE Shell · safe demo commands: help, date, clear, whoami",
+terminalStart:"S1MPLE OS [Version 1.0-alpha]\nType 'help' to see commands.",
+commandPlaceholder:"Enter command",run:"Run",
+aboutDescription:"S1MPLE OS is an Android launcher-style desktop concept.",
+build:"Build 1.0-alpha · Made for experimentation",
+yourRules:"Your space. Your rules.",
+loadingDate:"Loading date",
+help:"Available commands: help, date, whoami, clear",
+whoami:"guest@s1mple-os",notFound:"Command not found: ",
+windowApp:"App"
+},
+ru: {
+files:"Файлы",browser:"Браузер",settings:"Настройки",gallery:"Галерея",terminal:"Терминал",about:"О системе",
+slogan:"ТВОЁ ПРОСТРАНСТВО. ТВОИ ПРАВИЛА.",folder:"Папка",documents:"Документы",pictures:"Изображения",downloads:"Загрузки",
+fileDemo:"Демонстрационный файловый менеджер. Доступ к памяти Android появится позже.",
+browserPreview:"Предпросмотр браузера S1MPLE",searchPlaceholder:"Поиск или ввод адреса",open:"Открыть",
+browserHint:"Введите адрес сайта или поисковый запрос.",
+browserExternal:"Во время альфа-тестирования внешние страницы открываются в браузере. ",
+continue:"Продолжить",
+appearance:"Внешний вид",dark:"Тёмная тема",accent:"Цвет акцента",gold:"Золотой",version:"Версия",
+systemStatus:"Состояние системы",running:"Работает",
+galleryReady:"Галерея готова к добавлению первых фотографий.",
+galleryPlan:"Подключение выбора фотографий появится в одной из следующих сборок.",
+shell:"S1MPLE Shell · команды: help, date, clear, whoami",
+terminalStart:"S1MPLE OS [Версия 1.0-alpha]\nВведите 'help', чтобы увидеть команды.",
+commandPlaceholder:"Введите команду",run:"Выполнить",
+aboutDescription:"S1MPLE OS — концепция рабочего стола в стиле Android-лаунчера.",
+build:"Сборка 1.0-alpha · Проект для экспериментов",
+yourRules:"Твоё пространство. Твои правила.",
+loadingDate:"Загрузка даты",
+help:"Доступные команды: help, date, whoami, clear",
+whoami:"guest@s1mple-os",notFound:"Команда не найдена: ",
+windowApp:"Приложение"
+},
+ua: {
+files:"Файли",browser:"Браузер",settings:"Налаштування",gallery:"Галерея",terminal:"Термінал",about:"Про систему",
+slogan:"ТВІЙ ПРОСТІР. ТВОЇ ПРАВИЛА.",folder:"Папка",documents:"Документи",pictures:"Зображення",downloads:"Завантаження",
+fileDemo:"Демонстраційний файловий менеджер. Доступ до пам'яті Android з'явиться пізніше.",
+browserPreview:"Попередній перегляд браузера S1MPLE",searchPlaceholder:"Пошук або введення адреси",open:"Відкрити",
+browserHint:"Введіть адресу сайту або пошуковий запит.",
+browserExternal:"Під час альфа-тестування зовнішні сторінки відкриваються у браузері. ",
+continue:"Продовжити",
+appearance:"Вигляд",dark:"Темна тема",accent:"Колір акценту",gold:"Золотий",version:"Версія",
+systemStatus:"Стан системи",running:"Працює",
+galleryReady:"Галерея готова до додавання перших фотографій.",
+galleryPlan:"Підключення вибору фотографій з'явиться в одній із наступних збірок.",
+shell:"S1MPLE Shell · команди: help, date, clear, whoami",
+terminalStart:"S1MPLE OS [Версія 1.0-alpha]\nВведіть 'help', щоб побачити команди.",
+commandPlaceholder:"Введіть команду",run:"Запустити",
+aboutDescription:"S1MPLE OS — концепція робочого столу в стилі Android-лаунчера.",
+build:"Збірка 1.0-alpha · Проєкт для експериментів",
+yourRules:"Твій простір. Твої правила.",
+loadingDate:"Завантаження дати",
+help:"Доступні команди: help, date, whoami, clear",
+whoami:"guest@s1mple-os",notFound:"Команду не знайдено: ",
+windowApp:"Застосунок"
+}
+};
+
+let lang = "en";
+try {
+const nativeLang = window.S1MPLENative?.getLanguage?.();
+if (["ru","ua","en"].includes(nativeLang)) lang = nativeLang;
+} catch (e) {
+console.log("Native language bridge unavailable; using English.");
+}
+
+const t = key => translations[lang][key] ?? translations.en[key] ?? key;
+
+document.documentElement.lang = lang === "ua" ? "uk" : lang;
+
+function applyTranslations(){
+document.querySelectorAll("[data-i18n]").forEach(el=>{
+el.textContent = t(el.dataset.i18n);
+});
+$("slogan").textContent = t("slogan");
+}
+
+const $ = id => document.getElementById(id);
+
+function tick(){
+const d = new Date();
+$("clock").textContent = d.toLocaleTimeString(lang === "ua" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-US",{hour:"2-digit",minute:"2-digit"});
+$("date").textContent = d.toLocaleDateString(lang === "ua" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-US",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+}
+applyTranslations();
+tick();
+setInterval(tick,1000);
+
+function openApp(name){
+$("title").textContent = t(name.toLowerCase()) || t("windowApp");
+$("win").style.display = "block";
+const c = $("content");
+
+const pages = {
+Files:`
+<div class="tile file"><b>📁</b><div><strong>${t("documents")}</strong><div class="muted">${t("folder")}</div></div></div>
+<div class="tile file"><b>🖼️</b><div><strong>${t("pictures")}</strong><div class="muted">${t("folder")}</div></div></div>
+<div class="tile file"><b>⬇️</b><div><strong>${t("downloads")}</strong><div class="muted">${t("folder")}</div></div></div>
+<p class="muted">${t("fileDemo")}</p>`,
+
+Browser:`
+<p class="muted">${t("browserPreview")}</p>
+<input id="url" placeholder="${t("searchPlaceholder")}">
+<button class="action" onclick="searchWeb()">${t("open")}</button>
+<div id="browserMsg" class="tile" style="margin-top:14px">${t("browserHint")}</div>`,
+
+Settings:`
+<div class="tile">${t("appearance")} <span class="muted"> · ${t("dark")}</span><input class="switch" type="checkbox" checked disabled></div>
+<div class="tile">${t("accent")} <span style="color:var(--accent)">● ${t("gold")}</span></div>
+<div class="tile">${t("version")} <span class="muted">1.0 Alpha</span></div>
+<div class="tile">${t("systemStatus")} <span style="color:#8bd5a6">● ${t("running")}</span></div>`,
+
+Gallery:`
+<div class="tile">🖼️ ${t("galleryReady")}</div>
+<p class="muted">${t("galleryPlan")}</p>`,
+
+Terminal:`
+<p class="muted">${t("shell")}</p>
+<pre id="out">${t("terminalStart")}</pre>
+<input id="cmd" placeholder="${t("commandPlaceholder")}" onkeydown="if(event.key==='Enter')runCmd()">
+<button class="action" onclick="runCmd()">${t("run")}</button>`,
+
+About:`
+<div class="logo" style="font-size:38px">S1MPLE<span>.</span></div>
+<p>${t("yourRules")}</p>
+<div class="tile">${t("aboutDescription")}</div>
+<p class="muted">${t("build")}</p>`
+};
+
+c.innerHTML = pages[name] || "";
+}
+
+function closeApp(){
+$("win").style.display = "none";
+}
+
+function searchWeb(){
+const v = $("url").value.trim();
+if(!v)return;
+const u = /^https?:\/\//i.test(v) ? v : "https://www.google.com/search?q="+encodeURIComponent(v);
+const box = $("browserMsg");
+box.textContent = t("browserExternal");
+const a = document.createElement("a");
+a.href = u;
+a.target = "_blank";
+a.rel = "noopener";
+a.textContent = t("continue");
+a.style.color = "#f5b942";
+box.appendChild(a);
+}
+
+function runCmd(){
+const el = $("cmd"),out = $("out");
+if(!el||!out)return;
+const x = el.value.trim();
+let r = {
+help:t("help"),
+whoami:t("whoami"),
+date:new Date().toString(),
+clear:""
+}[x] ?? (t("notFound")+x);
+out.textContent += "\n> "+x+(x==="clear"?"":"\n"+r);
+el.value = "";
+}
+</script>
+</body>
+  </html>
+  
