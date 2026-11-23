@@ -1,730 +1,386 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#090d18">
 <title>S1MPLE OS</title>
-
 <style>
-:root{
-    --bg:#090d18;
-    --panel:rgba(17,25,43,.78);
-    --line:rgba(255,255,255,.12);
-    --txt:#f3f6ff;
-    --muted:#9aa8c3;
-    --accent:#f5b942;
-}
-
+:root{--bg:#090d18;--panel:rgba(17,25,43,.88);--line:rgba(255,255,255,.12);--txt:#f3f6ff;--muted:#9aa8c3;--accent:#f5b942}
 *{box-sizing:border-box}
-
-body{
-    margin:0;
-    background:
-        radial-gradient(ellipse at 75% 15%,#23365b 0,transparent 40%),
-        radial-gradient(ellipse at 15% 85%,#173a43 0,transparent 45%),
-        var(--bg);
-    color:var(--txt);
-    font:15px system-ui,-apple-system,sans-serif;
-    height:100dvh;
-    overflow:hidden;
-}
-
-.desktop{
-    height:100%;
-    padding:24px 18px 88px;
-    display:flex;
-    flex-direction:column;
-}
-
-.brand{
-    font-size:12px;
-    letter-spacing:4px;
-    color:var(--muted);
-    font-weight:700;
-}
-
-.hero{
-    margin:auto 0;
-    text-align:center;
-}
-
-.logo{
-    font-size:clamp(42px,12vw,68px);
-    font-weight:850;
-    letter-spacing:-4px;
-}
-
+body{margin:0;background:radial-gradient(ellipse at 75% 15%,#23365b 0,transparent 40%),radial-gradient(ellipse at 15% 85%,#173a43 0,transparent 45%),var(--bg);color:var(--txt);font:15px system-ui,sans-serif;height:100dvh;overflow:hidden}
+.desktop{height:100%;padding:24px 18px 88px;display:flex;flex-direction:column}
+.brand{font-size:12px;letter-spacing:4px;color:var(--muted);font-weight:700}
+.hero{margin:auto 0;text-align:center}
+.logo{font-size:clamp(42px,12vw,68px);font-weight:850;letter-spacing:-4px}
 .logo span{color:var(--accent)}
-
-.sub{
-    color:var(--muted);
-    letter-spacing:2px;
-    font-size:11px;
-}
-
-.clock{
-    font-size:34px;
-    font-weight:300;
-    margin-top:22px;
-}
-
-.date{
-    color:var(--muted);
-    font-size:13px;
-}
-
-.apps{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:12px;
-    margin:25px auto 0;
-    width:min(100%,430px);
-}
-
-.app{
-    border:1px solid var(--line);
-    background:var(--panel);
-    border-radius:18px;
-    padding:16px 8px;
-    text-align:center;
-    backdrop-filter:blur(16px);
-    min-height:92px;
-}
-
-.ico{
-    font-size:25px;
-    display:block;
-    margin-bottom:7px;
-}
-
-.app small{
-    font-size:12px;
-    color:#dce5f8;
-}
-
-.dock{
-    position:absolute;
-    bottom:14px;
-    left:50%;
-    transform:translateX(-50%);
-    display:flex;
-    gap:8px;
-    padding:9px;
-    background:rgba(13,20,35,.82);
-    border:1px solid var(--line);
-    border-radius:20px;
-    backdrop-filter:blur(20px);
-    max-width:calc(100% - 24px);
-}
-
-.dock button{
-    border:0;
-    background:transparent;
-    color:white;
-    font-size:23px;
-    width:42px;
-    height:42px;
-    border-radius:13px;
-}
-
-.dock button:active,
-.app:active{
-    background:#35445f;
-}
-
-.window{
-    position:absolute;
-    inset:14px 10px 76px;
-    background:rgba(12,18,31,.96);
-    border:1px solid var(--line);
-    border-radius:22px;
-    backdrop-filter:blur(20px);
-    display:none;
-    overflow:hidden;
-    box-shadow:0 20px 70px #0009;
-}
-
-.winhead{
-    height:58px;
-    padding:0 18px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    border-bottom:1px solid var(--line);
-    font-weight:700;
-}
-
-.close{
-    background:#29364e;
-    border:0;
-    color:white;
-    border-radius:10px;
-    padding:8px 12px;
-}
-
-.content{
-    padding:18px;
-    overflow:auto;
-    height:calc(100% - 58px);
-}
-
-.tile{
-    padding:15px;
-    background:#19243a;
-    border:1px solid var(--line);
-    border-radius:14px;
-    margin-bottom:10px;
-}
-
+.sub{color:var(--muted);letter-spacing:2px;font-size:11px}
+.clock{font-size:34px;font-weight:300;margin-top:22px}
+.date{color:var(--muted);font-size:13px}
+.apps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:25px auto 0;width:min(100%,430px)}
+.app{border:1px solid var(--line);background:var(--panel);border-radius:18px;padding:16px 8px;text-align:center;backdrop-filter:blur(16px);min-height:92px;cursor:pointer}
+.ico{font-size:25px;display:block;margin-bottom:7px}
+.app small{font-size:12px;color:#dce5f8}
+.dock{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;padding:9px;background:rgba(13,20,35,.92);border:1px solid var(--line);border-radius:20px;z-index:2}
+.dock button{border:0;background:transparent;color:white;font-size:23px;width:42px;height:42px;border-radius:13px}
+.window{position:absolute;z-index:3;inset:14px 10px 76px;background:rgba(12,18,31,.97);border:1px solid var(--line);border-radius:22px;display:none;overflow:hidden;box-shadow:0 20px 70px #0009}
+.winhead{height:58px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);font-weight:700}
+.close{background:#29364e;border:0;color:white;border-radius:10px;padding:8px 12px}
+.content{padding:18px;overflow:auto;height:calc(100% - 58px)}
+.tile{padding:15px;background:#19243a;border:1px solid var(--line);border-radius:14px;margin-bottom:10px}
 .muted{color:var(--muted)}
-
-input,select{
-    width:100%;
-    padding:13px;
-    border-radius:12px;
-    border:1px solid var(--line);
-    background:#101a2b;
-    color:white;
-    margin:8px 0;
-}
-
-button.action{
-    padding:11px 14px;
-    background:#dba83d;
-    color:#151a24;
-    border:0;
-    border-radius:11px;
-    font-weight:700;
-}
-
-pre{
-    white-space:pre-wrap;
-    color:#bde6c9;
-    background:#080d15;
-    padding:14px;
-    border-radius:12px;
-    min-height:130px;
-}
-
-.switch{
-    float:right;
-    accent-color:#e7b34b;
-}
-
-.file{
-    display:flex;
-    gap:12px;
-    align-items:center;
-}
-.file b{font-size:20px}
+input,select{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);background:#101a2b;color:white;margin:8px 0}
+button.action{padding:11px 14px;background:#dba83d;color:#151a24;border:0;border-radius:11px;font-weight:700;margin:3px}
+button.danger{background:#a83d4c;color:white}
+button.secondary{background:#35445f;color:white}
+pre{white-space:pre-wrap;color:#bde6c9;background:#080d15;padding:14px;border-radius:12px;min-height:90px}
+.file{display:flex;align-items:center;gap:10px}
+.file button{margin-left:auto}
+.progress{height:9px;background:#080d15;border-radius:20px;overflow:hidden;margin:9px 0 15px}
+.progress div{height:100%;background:var(--accent);width:0%}
+.status{float:right;color:#8bd5a6}
+.small{font-size:12px}
 </style>
 </head>
-
 <body>
 
 <div class="desktop">
-
-    <div class="brand">
-        S1MPLE OS <span style="color:var(--accent)">/ ALPHA 1.0</span>
+  <div class="brand">S1MPLE OS <span style="color:var(--accent)">/ ALPHA 1.1</span></div>
+  <div class="hero">
+    <div class="logo">S1MPLE<span>.</span></div>
+    <div class="sub" id="slogan">SIMPLE. FAST. YOURS.</div>
+    <div class="clock" id="clock">00:00</div>
+    <div class="date" id="date"></div>
+    <div class="apps">
+      <div class="app" onclick="openApp('Files')"><span class="ico">📁</span><small>Files</small></div>
+      <div class="app" onclick="openApp('Browser')"><span class="ico">🌐</span><small>Browser</small></div>
+      <div class="app" onclick="openApp('Memory')"><span class="ico">🧠</span><small>Memory</small></div>
+      <div class="app" onclick="openApp('Virtual OS')"><span class="ico">💻</span><small>Virtual OS</small></div>
+      <div class="app" onclick="openApp('Recovery')"><span class="ico">🛠️</span><small>Recovery</small></div>
+      <div class="app" onclick="openApp('Settings')"><span class="ico">⚙️</span><small>Settings</small></div>
+      <div class="app" onclick="openApp('Terminal')"><span class="ico">⌨️</span><small>Terminal</small></div>
+      <div class="app" onclick="openApp('About')"><span class="ico">ⓘ</span><small>About</small></div>
     </div>
-
-    <div class="hero">
-
-        <div class="logo">S1MPLE<span>.</span></div>
-
-        <div class="sub" id="slogan"></div>
-
-        <div class="clock" id="clock">00:00</div>
-        <div class="date" id="date"></div>
-
-        <div class="apps">
-
-            <div class="app" onclick="openApp('Files')">
-                <span class="ico">📁</span>
-                <small data-i18n="files">Files</small>
-            </div>
-
-            <div class="app" onclick="openApp('Browser')">
-                <span class="ico">🌐</span>
-                <small data-i18n="browser">Browser</small>
-            </div>
-
-            <div class="app" onclick="openApp('Settings')">
-                <span class="ico">⚙️</span>
-                <small data-i18n="settings">Settings</small>
-            </div>
-
-            <div class="app" onclick="openApp('Gallery')">
-                <span class="ico">🖼️</span>
-                <small data-i18n="gallery">Gallery</small>
-            </div>
-
-            <div class="app" onclick="openApp('Terminal')">
-                <span class="ico">⌨️</span>
-                <small data-i18n="terminal">Terminal</small>
-            </div>
-
-            <div class="app" onclick="openApp('About')">
-                <span class="ico">ⓘ</span>
-                <small data-i18n="about">About</small>
-            </div>
-
-        </div>
-    </div>
+  </div>
 </div>
 
 <div class="dock">
-    <button onclick="openApp('Files')">📁</button>
-    <button onclick="openApp('Browser')">🌐</button>
-    <button onclick="openApp('Settings')">⚙️</button>
-    <button onclick="openApp('Terminal')">⌨️</button>
+  <button onclick="openApp('Files')">📁</button>
+  <button onclick="openApp('Browser')">🌐</button>
+  <button onclick="openApp('Memory')">🧠</button>
+  <button onclick="openApp('Virtual OS')">💻</button>
+  <button onclick="openApp('Recovery')">🛠️</button>
 </div>
 
 <div class="window" id="win">
-
-    <div class="winhead">
-        <span id="title">App</span>
-        <button class="close" onclick="closeApp()">✕</button>
-    </div>
-
-    <div class="content" id="content"></div>
-
+  <div class="winhead">
+    <span id="title">App</span>
+    <button class="close" onclick="closeApp()">✕</button>
+  </div>
+  <div class="content" id="content"></div>
 </div>
 
 <script>
-const $ = id => document.getElementById(id);
+const $=id=>document.getElementById(id);
+let currentApp=null;
+let memoryCache=null;
 
-let lang = "en";
-let translations = {};
-let currentApp = null;
-
-const supportedLanguages = ["en","ru","uk"];
-
-
-/* LANGUAGE DETECTION */
+const labels={
+ en:{slogan:"SIMPLE. FAST. YOURS.",browser:"Browser",memory:"Memory",virtual:"Virtual OS",recovery:"Recovery",files:"Files",settings:"Settings",terminal:"Terminal",about:"About"},
+ ru:{slogan:"ПРОСТО. БЫСТРО. ТВОЁ.",browser:"Браузер",memory:"Память",virtual:"Виртуальная ОС",recovery:"Восстановление",files:"Файлы",settings:"Настройки",terminal:"Терминал",about:"О системе"},
+ uk:{slogan:"ПРОСТО. ШВИДКО. ТВОЄ.",browser:"Браузер",memory:"Пам'ять",virtual:"Віртуальна ОС",recovery:"Відновлення",files:"Файли",settings:"Налаштування",terminal:"Термінал",about:"Про систему"}
+};
+let lang="en";
+let virtualState;
 
 function detectLanguage(){
-
-    try{
-        const saved = localStorage.getItem("simpleos-language");
-
-        if(saved === "auto" || saved === null){
-            return detectDeviceLanguage();
-        }
-
-        if(supportedLanguages.includes(saved)){
-            return saved;
-        }
-
-        return "en";
-
-    }catch(error){
-        return detectDeviceLanguage();
-    }
+ try{
+  const saved=localStorage.getItem("simpleos-language");
+  if(saved&&saved!=="auto")return saved;
+  const native=window.S1MPLENative?.getLanguage?.();
+  if(["ru","uk","en"].includes(native))return native;
+ }catch(e){}
+ const code=(navigator.language||"en").slice(0,2).toLowerCase();
+ return ["ru","uk","en"].includes(code)?code:"en";
 }
-
-
-function detectDeviceLanguage(){
-
-    try{
-        const native = window.S1MPLENative?.getLanguage?.();
-
-        if(supportedLanguages.includes(native)){
-            return native;
-        }
-
-    }catch(error){
-        console.warn("Native language detection unavailable",error);
-    }
-
-    const device = navigator.languages?.[0]
-        || navigator.language
-        || "en";
-
-    const code = device.toLowerCase().split("-")[0];
-
-    return supportedLanguages.includes(code) ? code : "en";
-}
-
-
-/* TRANSLATIONS */
-
-async function loadLanguage(code){
-
-    if(!supportedLanguages.includes(code)){
-        code = "en";
-    }
-
-    try{
-
-        if(!window.S1MPLENative ||
-           typeof window.S1MPLENative.getTranslations !== "function"){
-            throw new Error("Android language bridge unavailable");
-        }
-
-        const json = window.S1MPLENative.getTranslations(code);
-        const data = JSON.parse(json);
-
-        translations[code] = data;
-        lang = code;
-
-        document.documentElement.lang = code;
-
-        applyTranslations();
-
-        if(currentApp){
-            openApp(currentApp);
-        }
-
-        tick();
-
-    }catch(error){
-
-        console.error("Language loading failed:",error);
-
-        if(code !== "en"){
-            await loadLanguage("en");
-        }
-    }
-}
-
-
-function t(key){
-
-    return translations[lang]?.[key]
-        ?? translations.en?.[key]
-        ?? key;
-}
-
-
-function applyTranslations(){
-
-    document.querySelectorAll("[data-i18n]").forEach(el=>{
-        el.textContent = t(el.dataset.i18n);
-    });
-
-    $("slogan").textContent = t("slogan");
-}
-
-
-/* CLOCK */
-
+function L(key){return labels[lang]?.[key]||labels.en[key]||key}
 function tick(){
-
-    const d = new Date();
-
-    const locale =
-        lang === "uk" ? "uk-UA" :
-        lang === "ru" ? "ru-RU" :
-        "en-US";
-
-    $("clock").textContent = d.toLocaleTimeString(locale,{
-        hour:"2-digit",
-        minute:"2-digit"
-    });
-
-    $("date").textContent = d.toLocaleDateString(locale,{
-        weekday:"long",
-        day:"numeric",
-        month:"long",
-        year:"numeric"
-    });
+ const d=new Date();
+ const locale=lang==="uk"?"uk-UA":lang==="ru"?"ru-RU":"en-US";
+ $("clock").textContent=d.toLocaleTimeString(locale,{hour:"2-digit",minute:"2-digit"});
+ $("date").textContent=d.toLocaleDateString(locale,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 }
-
-
-/* INITIALIZATION */
-
-async function init(){
-
-    try{
-
-        translations.en = JSON.parse(
-            window.S1MPLENative.getTranslations("en")
-        );
-
-    }catch(error){
-
-        console.error("English language loading failed:",error);
-    }
-
-    await loadLanguage(detectLanguage());
-
-    tick();
-
-    setInterval(tick,1000);
+function defaultVirtualState(){
+ return {
+  version:1,
+  booted:true,
+  files:[
+   {id:"boot",path:"/system/bootloader.sys",type:"system",size:128,active:true},
+   {id:"launcher",path:"/system/launcher.sys",type:"system",size:512,active:true},
+   {id:"ui",path:"/system/systemui.sys",type:"system",size:384,active:true},
+   {id:"settings",path:"/system/settings.sys",type:"system",size:256,active:true},
+   {id:"browser",path:"/system/browser.sys",type:"system",size:320,active:true},
+   {id:"audio",path:"/system/audio.service",type:"service",size:96,active:true},
+   {id:"network",path:"/system/network.service",type:"service",size:96,active:true},
+   {id:"readme",path:"/documents/readme.txt",type:"user",size:4,active:true}
+  ],
+  snapshots:[]
+ };
 }
+function loadVirtual(){
+ try{
+  const saved=window.S1MPLENative?.loadVirtualState?.();
+  if(saved){
+   const parsed=JSON.parse(saved);
+   if(Array.isArray(parsed.files))return parsed;
+  }
+ }catch(e){console.warn(e)}
+ return defaultVirtualState();
+}
+function saveVirtual(){
+ try{window.S1MPLENative?.saveVirtualState?.(JSON.stringify(virtualState))}
+ catch(e){console.error(e)}
+}
+virtualState=loadVirtual();
 
-
-/* APPLICATIONS */
-
+function hasFile(name){
+ return virtualState.files.some(f=>f.path.endsWith("/"+name));
+}
+function virtualHealth(){
+ const missing=[];
+ ["bootloader.sys","launcher.sys","systemui.sys","settings.sys","browser.sys"].forEach(n=>{
+  if(!hasFile(n))missing.push(n);
+ });
+ return missing;
+}
+function statusFor(file){
+ if(file.path.endsWith("launcher.sys")&&!hasFile("launcher.sys"))return "OFF";
+ return file.active?"ONLINE":"STOPPED";
+}
 function openApp(name){
-
-    currentApp = name;
-
-    $("title").textContent = t(name.toLowerCase());
-
-    $("win").style.display = "block";
-
-    const c = $("content");
-
-    const pages = {
-
-        Files:`
-
-        <div class="tile file">
-            <b>📁</b>
-            <div>
-                <strong>${t("documents")}</strong>
-                <div class="muted">${t("folder")}</div>
-            </div>
-        </div>
-
-        <div class="tile file">
-            <b>🖼️</b>
-            <div>
-                <strong>${t("pictures")}</strong>
-                <div class="muted">${t("folder")}</div>
-            </div>
-        </div>
-
-        <div class="tile file">
-            <b>⬇️</b>
-            <div>
-                <strong>${t("downloads")}</strong>
-                <div class="muted">${t("folder")}</div>
-            </div>
-        </div>
-
-        <p class="muted">${t("fileDemo")}</p>
-
-        `,
-
-
-        Browser:`
-
-        <p class="muted">${t("browserPreview")}</p>
-
-        <input id="url" placeholder="${t("searchPlaceholder")}">
-
-        <button class="action" onclick="searchWeb()">
-            ${t("open")}
-        </button>
-
-        <div id="browserMsg" class="tile" style="margin-top:14px">
-            ${t("browserHint")}
-        </div>
-
-        `,
-
-
-        Settings:`
-
-        <div class="tile">
-            ${t("appearance")}
-            <span class="muted"> · ${t("dark")}</span>
-        </div>
-
-        <div class="tile">
-            ${t("accent")}
-            <span style="color:var(--accent)">● ${t("gold")}</span>
-        </div>
-
-        <div class="tile">
-            ${t("version")}
-            <span class="muted">1.0 Alpha</span>
-        </div>
-
-        <div class="tile">
-            ${t("systemStatus")}
-            <span style="color:#8bd5a6">● ${t("running")}</span>
-        </div>
-
-        <div class="tile">
-
-            <strong>${t("language")}</strong>
-
-            <select id="languageSelect" onchange="changeLanguage(this.value)">
-
-                <option value="auto">${t("autoLanguage")}</option>
-                <option value="en">English</option>
-                <option value="ru">Русский</option>
-                <option value="uk">Українська</option>
-
-            </select>
-
-        </div>
-
-        `,
-
-
-        Gallery:`
-
-        <div class="tile">
-            🖼️ ${t("galleryReady")}
-        </div>
-
-        <p class="muted">${t("galleryPlan")}</p>
-
-        `,
-
-
-        Terminal:`
-
-        <p class="muted">${t("shell")}</p>
-
-        <pre id="out">${t("terminalStart")}</pre>
-
-        <input
-            id="cmd"
-            placeholder="${t("commandPlaceholder")}"
-            onkeydown="if(event.key==='Enter')runCmd()"
-        >
-
-        <button class="action" onclick="runCmd()">
-            ${t("run")}
-        </button>
-
-        `,
-
-
-        About:`
-
-        <div class="logo" style="font-size:38px">
-            S1MPLE<span>.</span>
-        </div>
-
-        <p>${t("yourRules")}</p>
-
-        <div class="tile">
-            ${t("aboutDescription")}
-        </div>
-
-        <p class="muted">${t("build")}</p>
-
-        `
-    };
-
-    c.innerHTML = pages[name] || "";
-
-    if(name === "Settings"){
-
-        const select = $("languageSelect");
-
-        select.value =
-            localStorage.getItem("simpleos-language") || "auto";
-    }
+ currentApp=name;
+ $("title").textContent=name==="Virtual OS"?L("virtual"):L(name.toLowerCase());
+ $("win").style.display="block";
+ renderApp();
 }
-
-
-/* CHANGE LANGUAGE */
-
-async function changeLanguage(code){
-
-    if(code !== "auto" && !supportedLanguages.includes(code)){
-        return;
-    }
-
-    try{
-        localStorage.setItem("simpleos-language",code);
-    }catch(error){}
-
-    const actual =
-        code === "auto"
-            ? detectDeviceLanguage()
-            : code;
-
-    await loadLanguage(actual);
+function renderApp(){
+ const c=$("content");
+ const pages={
+ Files:filesPage(),
+ Browser:browserPage(),
+ Memory:memoryPage(),
+ "Virtual OS":virtualPage(),
+ Recovery:recoveryPage(),
+ Settings:settingsPage(),
+ Terminal:terminalPage(),
+ About:`<div class="logo" style="font-size:38px">S1MPLE<span>.</span></div><div class="tile">S1MPLE OS Alpha 1.1</div><p class="muted">Android WebView desktop environment with a virtual operating system simulator.</p>`
+ };
+ c.innerHTML=pages[currentApp]||"";
 }
-
-
-/* CLOSE APPLICATION */
-
 function closeApp(){
-
-    $("win").style.display = "none";
-
-    currentApp = null;
+ $("win").style.display="none";
+ currentApp=null;
 }
-
-
-/* BROWSER */
-
-function searchWeb(){
-
-    const input = $("url");
-
-    if(!input) return;
-
-    const v = input.value.trim();
-
-    if(!v) return;
-
-    const u = /^https?:\/\//i.test(v)
-        ? v
-        : "https://www.google.com/search?q=" + encodeURIComponent(v);
-
-    const box = $("browserMsg");
-
-    box.textContent = t("browserExternal");
-
-    const a = document.createElement("a");
-
-    a.href = u;
-    a.target = "_blank";
-    a.rel = "noopener";
-    a.textContent = t("continue");
-    a.style.color = "#f5b942";
-
-    box.appendChild(a);
+function filesPage(){
+ return `<div class="tile">📁 <b>Documents</b><p class="muted small">Local app folder preview</p></div>
+ <div class="tile">🖼️ <b>Pictures</b><p class="muted small">Gallery folder preview</p></div>
+ <div class="tile">⬇️ <b>Downloads</b><p class="muted small">Downloaded files</p></div>
+ <p class="muted small">This is the S1MPLE OS app file area. Virtual OS files are managed separately.</p>`;
 }
-
-
-/* TERMINAL */
-
-function runCmd(){
-
-    const el = $("cmd");
-    const out = $("out");
-
-    if(!el || !out) return;
-
-    const x = el.value.trim();
-
-    let r = {
-
-        help:t("help"),
-
-        whoami:t("whoami"),
-
-        date:new Date().toLocaleString(
-            lang === "uk" ? "uk-UA" :
-            lang === "ru" ? "ru-RU" :
-            "en-US"
-        ),
-
-        clear:""
-
-    }[x] ?? (t("notFound") + x);
-
-    if(x === "clear"){
-
-        out.textContent = "";
-
-    }else{
-
-        out.textContent += "\n> " + x + "\n" + r;
-    }
-
-    el.value = "";
+function browserPage(){
+ return `<div class="tile"><b>🌐 S1MPLE Browser</b><p class="muted">Websites open in an in-app browser window.</p></div>
+ <input id="browserUrl" placeholder="Enter website or search">
+ <button class="action" onclick="goBrowser()">Open website</button>
+ <p class="muted small">The browser has Back, Forward, Reload, External and Close controls.</p>`;
 }
-
-
-/* START */
-
+function goBrowser(){
+ const value=$("browserUrl")?.value.trim();
+ if(!value)return;
+ window.S1MPLENative?.openBrowser?.(value);
+}
+function memoryPage(){
+ return `<div class="tile"><b>Android physical memory</b><p class="muted small">Live device statistics</p>
+ <div id="ramInfo">Loading...</div></div>
+ <div class="tile"><b>App storage</b><div id="storageInfo">Loading...</div></div>
+ <button class="action" onclick="refreshMemory()">Refresh</button>
+ <div class="tile"><b>Virtual memory</b><p class="muted">Virtual OS simulation, separate from Android RAM.</p>
+ <div>Virtual RAM limit: 4 GB</div><div>Virtual disk limit: 32 GB</div></div>`;
+}
+function formatBytes(n){
+ if(!Number.isFinite(n))return "Unknown";
+ const units=["B","KB","MB","GB","TB"];
+ let i=0;
+ while(n>=1024&&i<units.length-1){n/=1024;i++}
+ return n.toFixed(2)+" "+units[i];
+}
+function refreshMemory(){
+ try{
+  memoryCache=JSON.parse(window.S1MPLENative.getMemoryInfo());
+  const m=memoryCache;
+  const used=m.totalRam-m.availableRam;
+  $("ramInfo").innerHTML=`<b>${formatBytes(used)}</b> used / ${formatBytes(m.totalRam)} total
+   <div class="progress"><div style="width:${Math.min(100,used/m.totalRam*100)}%"></div></div>
+   <span class="muted small">${formatBytes(m.availableRam)} available</span>`;
+  $("storageInfo").innerHTML=`<b>${formatBytes(m.storageUsed)}</b> used / ${formatBytes(m.storageTotal)} total
+   <div class="progress"><div style="width:${Math.min(100,m.storageUsed/m.storageTotal*100)}%"></div></div>
+   <span class="muted small">${formatBytes(m.storageFree)} free</span>`;
+ }catch(e){
+  $("ramInfo").textContent="Android memory bridge unavailable.";
+  $("storageInfo").textContent="Storage information unavailable.";
+ }
+}
+function virtualPage(){
+ const missing=virtualHealth();
+ const bootOK=hasFile("bootloader.sys");
+ const launcherOK=hasFile("launcher.sys");
+ const uiOK=hasFile("systemui.sys");
+ const state=!bootOK?"BOOT FAILURE":!launcherOK?"NO DESKTOP":!uiOK?"UI FAILURE":missing.length?"DEGRADED":"RUNNING";
+ const color=state==="RUNNING"?"#8bd5a6":"#ff7777";
+ return `<div class="tile"><b>S1MPLE Virtual OS</b><span class="status" style="color:${color}">${state}</span>
+ <p class="muted small">Independent virtual file system. Changes are saved on this device.</p>
+ <div>Virtual RAM: 4 GB</div><div>Virtual disk: 32 GB</div></div>
+ ${!bootOK?`<div class="tile" style="color:#ff7777"><b>BOOT FAILURE</b><p>Virtual bootloader is missing. The virtual OS cannot start.</p></div>`:""}
+ ${!launcherOK?`<div class="tile" style="color:#ff7777"><b>DESKTOP NOT FOUND</b><p>launcher.sys is missing. The virtual system has no desktop.</p></div>`:""}
+ ${!uiOK?`<div class="tile" style="color:#ff7777"><b>INTERFACE FAILURE</b><p>systemui.sys is missing. The virtual status interface is unavailable.</p></div>`:""}
+ <button class="action" onclick="openApp('Virtual Explorer')">Open Virtual Explorer</button>
+ <button class="action secondary" onclick="openApp('Processes')">Processes</button>
+ <button class="action secondary" onclick="virtualReboot()">Reboot virtual OS</button>
+ <div class="tile"><b>System diagnostics</b><p class="small muted">${missing.length?("Missing: "+missing.join(", ")):"All required system files found."}</p></div>`;
+}
+function explorerPage(){
+ let rows=virtualState.files.map(f=>`<div class="tile file"><span>${f.type==="system"?"⚙️":f.type==="service"?"🔌":"📄"}</span><div style="min-width:0;overflow-wrap:anywhere"><b>${escapeHTML(f.path.split("/").pop())}</b><div class="muted small">${escapeHTML(f.path)} · ${f.size} KB</div></div><button class="action danger" onclick="deleteVirtualFile('${f.id}')">Delete</button></div>`).join("");
+ return `<div class="tile"><b>Virtual Explorer</b><p class="muted small">Deleting system files changes the virtual OS state.</p></div>
+ <input id="newFileName" placeholder="New filename, e.g. notes.txt">
+ <button class="action" onclick="createVirtualFile()">Create file</button>
+ ${rows||"<div class='tile'>No files found.</div>"}`;
+}
+function escapeHTML(s){
+ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function deleteVirtualFile(id){
+ const file=virtualState.files.find(f=>f.id===id);
+ if(!file)return;
+ if(!confirm("Delete "+file.path+" from the virtual system?"))return;
+ virtualState.files=virtualState.files.filter(f=>f.id!==id);
+ saveVirtual();
+ renderApp();
+}
+function createVirtualFile(){
+ const input=$("newFileName");
+ const name=input?.value.trim();
+ if(!name)return;
+ if(name.includes("/")||name.includes("\\")||name==="."||name===".."){
+  alert("Enter a filename, not a path.");
+  return;
+ }
+ virtualState.files.push({id:"user-"+Date.now(),path:"/documents/"+name,type:"user",size:1,active:true});
+ saveVirtual();
+ renderApp();
+}
+function virtualReboot(){
+ const missing=virtualHealth();
+ if(!hasFile("bootloader.sys")){
+  alert("BOOT FAILURE: bootloader.sys is missing. Open Recovery to repair the virtual OS.");
+ }else if(!hasFile("launcher.sys")){
+  alert("SYSTEM STARTED, BUT NO DESKTOP: launcher.sys is missing.");
+ }else if(!hasFile("systemui.sys")){
+  alert("PARTIAL BOOT: system interface is missing.");
+ }else{
+  alert(missing.length?"Virtual OS started with errors.":"Virtual OS booted successfully.");
+ }
+}
+function processesPage(){
+ const services=[
+  ["Launcher","launcher.sys"],["System UI","systemui.sys"],["Settings","settings.sys"],
+  ["Browser","browser.sys"],["Audio service","audio.service"],["Network service","network.service"]
+ ];
+ return `<div class="tile"><b>Virtual processes</b><p class="muted small">A service is available only while its virtual file exists.</p></div>`+
+ services.map(([label,file])=>`<div class="tile">${label}<span class="status" style="color:${hasFile(file)?"#8bd5a6":"#ff7777"}">${hasFile(file)?"RUNNING":"MISSING"}</span></div>`).join("");
+}
+function recoveryPage(){
+ const missing=virtualHealth();
+ return `<div class="tile"><b>🛠️ S1MPLE Recovery</b><p class="muted">Recovery only repairs the simulated Virtual OS.</p>
+ <p style="color:${missing.length?"#ff7777":"#8bd5a6"}">${missing.length?missing.length+" required component(s) missing":"Virtual system looks healthy."}</p></div>
+ <button class="action" onclick="repairVirtual()">Repair missing system files</button>
+ <button class="action secondary" onclick="makeSnapshot()">Create restore point</button>
+ <button class="action secondary" onclick="restoreSnapshot()">Restore last point</button>
+ <button class="action danger" onclick="factoryVirtual()">Factory reset Virtual OS</button>
+ <p class="muted small">Factory reset deletes virtual files and restores the default virtual system. It does not reset Android or erase personal phone files.</p>`;
+}
+function repairVirtual(){
+ const defaults=defaultVirtualState().files;
+ defaults.forEach(f=>{
+  if(["bootloader.sys","launcher.sys","systemui.sys","settings.sys","browser.sys"].some(n=>f.path.endsWith(n))&&!hasFile(f.path.split("/").pop())){
+   virtualState.files.push(f);
+  }
+ });
+ saveVirtual();
+ renderApp();
+ alert("Recovery repair completed.");
+}
+function makeSnapshot(){
+ virtualState.snapshots=virtualState.snapshots||[];
+ virtualState.snapshots.push(JSON.stringify(virtualState.files));
+ if(virtualState.snapshots.length>5)virtualState.snapshots.shift();
+ saveVirtual();
+ alert("Restore point saved.");
+}
+function restoreSnapshot(){
+ const snapshots=virtualState.snapshots||[];
+ if(!snapshots.length){alert("No restore point available.");return}
+ if(!confirm("Restore the latest saved virtual system state?"))return;
+ virtualState.files=JSON.parse(snapshots[snapshots.length-1]);
+ saveVirtual();
+ renderApp();
+}
+function factoryVirtual(){
+ if(!confirm("Reset the Virtual OS to its original state?"))return;
+ virtualState=defaultVirtualState();
+ saveVirtual();
+ renderApp();
+}
+function settingsPage(){
+ return `<div class="tile"><b>Appearance</b><p class="muted">Dark theme · Gold accent</p></div>
+ <div class="tile"><b>Language</b><select id="languageSelect" onchange="changeLanguage(this.value)">
+ <option value="auto">System default</option><option value="en">English</option><option value="ru">Русский</option><option value="uk">Українська</option></select></div>
+ <div class="tile"><b>Version</b><p class="muted">S1MPLE OS Alpha 1.1</p></div>`;
+}
+function changeLanguage(code){
+ localStorage.setItem("simpleos-language",code);
+ lang=code==="auto"?detectLanguage():code;
+ $("slogan").textContent=L("slogan");
+ tick();
+ if(currentApp)renderApp();
+}
+function terminalPage(){
+ return `<p class="muted">S1MPLE virtual shell</p><pre id="terminalOutput">S1MPLE OS [Version 1.1]\nType help for commands.</pre>
+ <input id="terminalInput" placeholder="Enter command" onkeydown="if(event.key==='Enter')runTerminal()">
+ <button class="action" onclick="runTerminal()">Run</button>`;
+}
+function runTerminal(){
+ const input=$("terminalInput"),out=$("terminalOutput");
+ if(!input||!out)return;
+ const cmd=input.value.trim();
+ let result="";
+ if(cmd==="help")result="help, date, whoami, ls, status, reboot";
+ else if(cmd==="date")result=new Date().toString();
+ else if(cmd==="whoami")result="simpleos-user";
+ else if(cmd==="ls")result=virtualState.files.map(f=>f.path).join("\n");
+ else if(cmd==="status")result="Virtual OS: "+(virtualHealth().length?"DEGRADED":"RUNNING");
+ else if(cmd==="reboot")result="Use Virtual OS > Reboot virtual OS.";
+ else if(cmd==="clear"){out.textContent="";input.value="";return}
+ else result="Command not found: "+cmd;
+ out.textContent+="\n> "+cmd+"\n"+result;
+ input.value="";
+}
+function init(){
+ lang=detectLanguage();
+ $("slogan").textContent=L("slogan");
+ tick();
+ setInterval(tick,1000);
+}
 init();
-
 </script>
 </body>
 </html>
