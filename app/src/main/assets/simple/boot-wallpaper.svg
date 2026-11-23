@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#05070b"/><stop offset=".55" stop-color="#111722"/><stop offset="1" stop-color="#050505"/></linearGradient>
+    <radialGradient id="glow"><stop stop-color="#d59e19" stop-opacity=".32"/><stop offset="1" stop-color="#d59e19" stop-opacity="0"/></radialGradient>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#fff" stroke-opacity=".045" stroke-width="1"/></pattern>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+  <circle cx="1420" cy="430" r="700" fill="url(#glow)"/>
+  <path d="M1100 1080 1640 0h180l-540 1080z" fill="#f2bd35" opacity=".07"/>
+  <path d="M1350 1080 1890 0h30v360l-360 720z" fill="#f2bd35" opacity=".08"/>
+  <text x="150" y="850" font-family="Arial,sans-serif" font-size="24" letter-spacing="10" fill="#f5c542" opacity=".7">COUNTER-STRIKE INSPIRED FAN PROJECT</text>
+  <text x="150" y="930" font-family="Arial,sans-serif" font-size="18" letter-spacing="6" fill="#d8d8d8" opacity=".45">UNOFFICIAL • COMMUNITY CONCEPT</text>
+</svg>

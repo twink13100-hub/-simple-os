@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 260">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1"><stop stop-color="#ffe36e"/><stop offset="1" stop-color="#e6a900"/></linearGradient>
+  </defs>
+  <rect width="900" height="260" rx="34" fill="#090b10"/>
+  <path d="M72 188 145 55h58l-72 133z" fill="url(#g)"/>
+  <path d="M170 188 243 55h58l-72 133z" fill="#f5c542" opacity=".55"/>
+  <text x="340" y="150" font-family="Arial,sans-serif" font-size="92" font-weight="900" letter-spacing="5" fill="#f5f5f5">S1MPLE</text>
+  <text x="346" y="204" font-family="Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="12" fill="#f5c542">OPERATING SYSTEM</text>
+</svg>
