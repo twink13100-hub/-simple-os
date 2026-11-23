@@ -8,23 +8,42 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import org.json.JSONObject
+import android.util.Log
+import java.util.Locale
 
 class MainActivity : Activity() {
 
     private lateinit var web: WebView
 
+    private val supportedLanguages = setOf("ru", "uk", "en")
+
     private fun getSystemLanguage(): String {
+
         val appName = applicationInfo
             .loadLabel(packageManager)
             .toString()
-            .uppercase()
+            .uppercase(Locale.ROOT)
 
         return when {
             appName.endsWith(" RU") -> "ru"
             appName.endsWith(" UA") -> "uk"
             appName.endsWith(" EN") -> "en"
-            else -> "en"
+
+            else -> {
+                val locale = if (android.os.Build.VERSION.SDK_INT >= 24) {
+                    resources.configuration.locales[0]
+                } else {
+                    @Suppress("DEPRECATION")
+                    resources.configuration.locale
+                }
+
+                when (locale.language.lowercase(Locale.ROOT)) {
+                    "ru" -> "ru"
+                    "uk", "ua" -> "uk"
+                    "en" -> "en"
+                    else -> "en"
+                }
+            }
         }
     }
 
@@ -37,16 +56,23 @@ class MainActivity : Activity() {
 
         @JavascriptInterface
         fun getTranslations(code: String): String {
-            val language = when (code) {
-                "ru", "uk", "en" -> code
-                else -> "en"
+
+            val language = if (code in supportedLanguages) {
+                code
+            } else {
+                "en"
             }
 
             return try {
+
                 assets.open("languages/$language.json")
                     .bufferedReader(Charsets.UTF_8)
                     .use { it.readText() }
+
             } catch (e: Exception) {
+
+                Log.e("S1MPLE", "Cannot load $language.json", e)
+
                 assets.open("languages/en.json")
                     .bufferedReader(Charsets.UTF_8)
                     .use { it.readText() }
@@ -56,6 +82,7 @@ class MainActivity : Activity() {
 
     @Suppress("DEPRECATION")
     private fun enableFullscreen() {
+
         window.decorView.systemUiVisibility =
             (View.SYSTEM_UI_FLAG_FULLSCREEN
                     or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -73,11 +100,17 @@ class MainActivity : Activity() {
 
         web = WebView(this)
 
-        web.settings.javaScriptEnabled = true
-        web.settings.domStorageEnabled = true
-        web.settings.allowFileAccess = true
+        web.settings.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            allowFileAccess = true
+            allowContentAccess = true
+        }
 
-        web.addJavascriptInterface(LanguageBridge(), "S1MPLENative")
+        web.addJavascriptInterface(
+            LanguageBridge(),
+            "S1MPLENative"
+        )
 
         web.webViewClient = WebViewClient()
         web.webChromeClient = WebChromeClient()
@@ -97,8 +130,10 @@ class MainActivity : Activity() {
     }
 
     override fun onDestroy() {
+
         if (::web.isInitialized) {
             web.stopLoading()
+            web.loadUrl("about:blank")
             web.removeJavascriptInterface("S1MPLENative")
             web.destroy()
         }
