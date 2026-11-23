@@ -31,7 +31,7 @@ body{margin:0;background:radial-gradient(ellipse at 75% 15%,#23365b 0,transparen
 .content{padding:18px;overflow:auto;height:calc(100% - 58px)}
 .tile{padding:15px;background:#19243a;border:1px solid var(--line);border-radius:14px;margin-bottom:10px}
 .muted{color:var(--muted)}
-input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);background:#101a2b;color:white;margin:8px 0}
+input,select{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);background:#101a2b;color:white;margin:8px 0}
 button.action{padding:11px 14px;background:#dba83d;color:#151a24;border:0;border-radius:11px;font-weight:700}
 pre{white-space:pre-wrap;color:#bde6c9;background:#080d15;padding:14px;border-radius:12px;min-height:130px}
 .switch{float:right;accent-color:#e7b34b}
@@ -40,14 +40,13 @@ pre{white-space:pre-wrap;color:#bde6c9;background:#080d15;padding:14px;border-ra
 </style>
 </head>
 <body>
-
 <div class="desktop">
 <div class="brand">S1MPLE OS <span style="color:var(--accent)">/ ALPHA 1.0</span></div>
 <div class="hero">
 <div class="logo">S1MPLE<span>.</span></div>
-<div class="sub" id="slogan">YOUR SPACE. YOUR RULES.</div>
+<div class="sub" id="slogan"></div>
 <div class="clock" id="clock">00:00</div>
-<div class="date" id="date">Loading date</div>
+<div class="date" id="date"></div>
 <div class="apps">
 <div class="app" onclick="openApp('Files')"><span class="ico">📁</span><small data-i18n="files">Files</small></div>
 <div class="app" onclick="openApp('Browser')"><span class="ico">🌐</span><small data-i18n="browser">Browser</small></div>
@@ -72,185 +71,208 @@ pre{white-space:pre-wrap;color:#bde6c9;background:#080d15;padding:14px;border-ra
 </div>
 
 <script>
-const translations = {
-en: {
-files:"Files",browser:"Browser",settings:"Settings",gallery:"Gallery",terminal:"Terminal",about:"About",
-slogan:"YOUR SPACE. YOUR RULES.",folder:"Folder",documents:"Documents",pictures:"Pictures",downloads:"Downloads",
-fileDemo:"Local demo file manager. Android storage access will be added later.",
-browserPreview:"S1MPLE Browser preview",searchPlaceholder:"Search or enter address",open:"Open",
-browserHint:"Enter a website address or search phrase.",
-browserExternal:"External pages open in your browser for this alpha build. ",
-continue:"Continue",
-appearance:"Appearance",dark:"Dark",accent:"Accent color",gold:"Gold",version:"Version",
-systemStatus:"System status",running:"Running",
-galleryReady:"Gallery is ready for its first pictures.",
-galleryPlan:"Photo picker integration is planned for a later build.",
-shell:"S1MPLE Shell · safe demo commands: help, date, clear, whoami",
-terminalStart:"S1MPLE OS [Version 1.0-alpha]\nType 'help' to see commands.",
-commandPlaceholder:"Enter command",run:"Run",
-aboutDescription:"S1MPLE OS is an Android launcher-style desktop concept.",
-build:"Build 1.0-alpha · Made for experimentation",
-yourRules:"Your space. Your rules.",
-loadingDate:"Loading date",
-help:"Available commands: help, date, whoami, clear",
-whoami:"guest@s1mple-os",notFound:"Command not found: ",
-windowApp:"App"
-},
-ru: {
-files:"Файлы",browser:"Браузер",settings:"Настройки",gallery:"Галерея",terminal:"Терминал",about:"О системе",
-slogan:"ТВОЁ ПРОСТРАНСТВО. ТВОИ ПРАВИЛА.",folder:"Папка",documents:"Документы",pictures:"Изображения",downloads:"Загрузки",
-fileDemo:"Демонстрационный файловый менеджер. Доступ к памяти Android появится позже.",
-browserPreview:"Предпросмотр браузера S1MPLE",searchPlaceholder:"Поиск или ввод адреса",open:"Открыть",
-browserHint:"Введите адрес сайта или поисковый запрос.",
-browserExternal:"Во время альфа-тестирования внешние страницы открываются в браузере. ",
-continue:"Продолжить",
-appearance:"Внешний вид",dark:"Тёмная тема",accent:"Цвет акцента",gold:"Золотой",version:"Версия",
-systemStatus:"Состояние системы",running:"Работает",
-galleryReady:"Галерея готова к добавлению первых фотографий.",
-galleryPlan:"Подключение выбора фотографий появится в одной из следующих сборок.",
-shell:"S1MPLE Shell · команды: help, date, clear, whoami",
-terminalStart:"S1MPLE OS [Версия 1.0-alpha]\nВведите 'help', чтобы увидеть команды.",
-commandPlaceholder:"Введите команду",run:"Выполнить",
-aboutDescription:"S1MPLE OS — концепция рабочего стола в стиле Android-лаунчера.",
-build:"Сборка 1.0-alpha · Проект для экспериментов",
-yourRules:"Твоё пространство. Твои правила.",
-loadingDate:"Загрузка даты",
-help:"Доступные команды: help, date, whoami, clear",
-whoami:"guest@s1mple-os",notFound:"Команда не найдена: ",
-windowApp:"Приложение"
-},
-ua: {
-files:"Файли",browser:"Браузер",settings:"Налаштування",gallery:"Галерея",terminal:"Термінал",about:"Про систему",
-slogan:"ТВІЙ ПРОСТІР. ТВОЇ ПРАВИЛА.",folder:"Папка",documents:"Документи",pictures:"Зображення",downloads:"Завантаження",
-fileDemo:"Демонстраційний файловий менеджер. Доступ до пам'яті Android з'явиться пізніше.",
-browserPreview:"Попередній перегляд браузера S1MPLE",searchPlaceholder:"Пошук або введення адреси",open:"Відкрити",
-browserHint:"Введіть адресу сайту або пошуковий запит.",
-browserExternal:"Під час альфа-тестування зовнішні сторінки відкриваються у браузері. ",
-continue:"Продовжити",
-appearance:"Вигляд",dark:"Темна тема",accent:"Колір акценту",gold:"Золотий",version:"Версія",
-systemStatus:"Стан системи",running:"Працює",
-galleryReady:"Галерея готова до додавання перших фотографій.",
-galleryPlan:"Підключення вибору фотографій з'явиться в одній із наступних збірок.",
-shell:"S1MPLE Shell · команди: help, date, clear, whoami",
-terminalStart:"S1MPLE OS [Версія 1.0-alpha]\nВведіть 'help', щоб побачити команди.",
-commandPlaceholder:"Введіть команду",run:"Запустити",
-aboutDescription:"S1MPLE OS — концепція робочого столу в стилі Android-лаунчера.",
-build:"Збірка 1.0-alpha · Проєкт для експериментів",
-yourRules:"Твій простір. Твої правила.",
-loadingDate:"Завантаження дати",
-help:"Доступні команди: help, date, whoami, clear",
-whoami:"guest@s1mple-os",notFound:"Команду не знайдено: ",
-windowApp:"Застосунок"
-}
-};
-
-let lang = "ru";
-try {
-const nativeLang = window.S1MPLENative?.getLanguage?.();
-if (["ru","ua","en"].includes(nativeLang)) lang = nativeLang;
-} catch (e) {
-console.log("Native language bridge unavailable; using English.");
-}
-
-const t = key => translations[lang][key] ?? translations.en[key] ?? key;
-
-document.documentElement.lang = lang === "ua" ? "uk" : lang;
-
-function applyTranslations(){
-document.querySelectorAll("[data-i18n]").forEach(el=>{
-el.textContent = t(el.dataset.i18n);
-});
-$("slogan").textContent = t("slogan");
-}
-
 const $ = id => document.getElementById(id);
 
-function tick(){
-const d = new Date();
-$("clock").textContent = d.toLocaleTimeString(lang === "ua" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-US",{hour:"2-digit",minute:"2-digit"});
-$("date").textContent = d.toLocaleDateString(lang === "ua" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-US",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+let lang = "en";
+let translations = {};
+let currentApp = null;
+
+const supportedLanguages = ["en","ru","uk"];
+
+function detectLanguage(){
+    try{
+        const saved = localStorage.getItem("simpleos-language");
+        if(saved === "auto" || saved === null){
+            const native = window.S1MPLENative?.getLanguage?.();
+            if(["en","ru","uk"].includes(native)) return native;
+
+            const device = navigator.languages?.[0] || navigator.language || "en";
+            const code = device.toLowerCase().split("-")[0];
+            return supportedLanguages.includes(code) ? code : "en";
+        }
+        return saved;
+    }catch(e){
+        return "en";
+    }
 }
-applyTranslations();
-tick();
-setInterval(tick,1000);
+
+async function loadLanguage(code){
+    if(!supportedLanguages.includes(code)) code = "en";
+
+    try{
+        const response = await fetch("languages/" + code + ".json");
+        if(!response.ok) throw new Error("Language file not found");
+
+        const data = await response.json();
+
+        const fallback = translations.en || {};
+        lang = code;
+        translations[code] = data;
+
+        document.documentElement.lang = code;
+        applyTranslations();
+
+        if(currentApp) openApp(currentApp);
+        tick();
+    }catch(error){
+        console.error("Language loading failed:", error);
+        if(code !== "en") await loadLanguage("en");
+    }
+}
+
+function t(key){
+    return translations[lang]?.[key] ?? translations.en?.[key] ?? key;
+}
+
+function applyTranslations(){
+    document.querySelectorAll("[data-i18n]").forEach(el=>{
+        el.textContent = t(el.dataset.i18n);
+    });
+    $("slogan").textContent = t("slogan");
+}
+
+function tick(){
+    const d = new Date();
+    const locale = lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-US";
+    $("clock").textContent = d.toLocaleTimeString(locale,{hour:"2-digit",minute:"2-digit"});
+    $("date").textContent = d.toLocaleDateString(locale,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+}
+
+async function init(){
+    const initial = detectLanguage();
+
+    // Load English first as fallback.
+    try{
+        const response = await fetch("languages/en.json");
+        translations.en = await response.json();
+    }catch(e){
+        console.error("English language file missing",e);
+    }
+
+    await loadLanguage(initial);
+    tick();
+    setInterval(tick,1000);
+}
 
 function openApp(name){
-$("title").textContent = t(name.toLowerCase()) || t("windowApp");
-$("win").style.display = "block";
-const c = $("content");
+    currentApp = name;
+    $("title").textContent = t(name.toLowerCase());
+    $("win").style.display = "block";
+    const c = $("content");
 
-const pages = {
-Files:`
-<div class="tile file"><b>📁</b><div><strong>${t("documents")}</strong><div class="muted">${t("folder")}</div></div></div>
-<div class="tile file"><b>🖼️</b><div><strong>${t("pictures")}</strong><div class="muted">${t("folder")}</div></div></div>
-<div class="tile file"><b>⬇️</b><div><strong>${t("downloads")}</strong><div class="muted">${t("folder")}</div></div></div>
-<p class="muted">${t("fileDemo")}</p>`,
+    const pages = {
+        Files:`
+        <div class="tile file"><b>📁</b><div><strong>${t("documents")}</strong><div class="muted">${t("folder")}</div></div></div>
+        <div class="tile file"><b>🖼️</b><div><strong>${t("pictures")}</strong><div class="muted">${t("folder")}</div></div></div>
+        <div class="tile file"><b>⬇️</b><div><strong>${t("downloads")}</strong><div class="muted">${t("folder")}</div></div></div>
+        <p class="muted">${t("fileDemo")}</p>`,
 
-Browser:`
-<p class="muted">${t("browserPreview")}</p>
-<input id="url" placeholder="${t("searchPlaceholder")}">
-<button class="action" onclick="searchWeb()">${t("open")}</button>
-<div id="browserMsg" class="tile" style="margin-top:14px">${t("browserHint")}</div>`,
+        Browser:`
+        <p class="muted">${t("browserPreview")}</p>
+        <input id="url" placeholder="${t("searchPlaceholder")}">
+        <button class="action" onclick="searchWeb()">${t("open")}</button>
+        <div id="browserMsg" class="tile" style="margin-top:14px">${t("browserHint")}</div>`,
 
-Settings:`
-<div class="tile">${t("appearance")} <span class="muted"> · ${t("dark")}</span><input class="switch" type="checkbox" checked disabled></div>
-<div class="tile">${t("accent")} <span style="color:var(--accent)">● ${t("gold")}</span></div>
-<div class="tile">${t("version")} <span class="muted">1.0 Alpha</span></div>
-<div class="tile">${t("systemStatus")} <span style="color:#8bd5a6">● ${t("running")}</span></div>`,
+        Settings:`
+        <div class="tile">${t("appearance")} <span class="muted"> · ${t("dark")}</span></div>
+        <div class="tile">${t("accent")} <span style="color:var(--accent)">● ${t("gold")}</span></div>
+        <div class="tile">${t("version")} <span class="muted">1.0 Alpha</span></div>
+        <div class="tile">${t("systemStatus")} <span style="color:#8bd5a6">● ${t("running")}</span></div>
+        <div class="tile"><strong>${t("language")}</strong>
+        <select id="languageSelect" onchange="changeLanguage(this.value)">
+        <option value="auto">${t("autoLanguage")}</option>
+        <option value="en">English</option>
+        <option value="ru">Русский</option>
+        <option value="uk">Українська</option>
+        </select></div>`,
 
-Gallery:`
-<div class="tile">🖼️ ${t("galleryReady")}</div>
-<p class="muted">${t("galleryPlan")}</p>`,
+        Gallery:`
+        <div class="tile">🖼️ ${t("galleryReady")}</div>
+        <p class="muted">${t("galleryPlan")}</p>`,
 
-Terminal:`
-<p class="muted">${t("shell")}</p>
-<pre id="out">${t("terminalStart")}</pre>
-<input id="cmd" placeholder="${t("commandPlaceholder")}" onkeydown="if(event.key==='Enter')runCmd()">
-<button class="action" onclick="runCmd()">${t("run")}</button>`,
+        Terminal:`
+        <p class="muted">${t("shell")}</p>
+        <pre id="out">${t("terminalStart")}</pre>
+        <input id="cmd" placeholder="${t("commandPlaceholder")}" onkeydown="if(event.key==='Enter')runCmd()">
+        <button class="action" onclick="runCmd()">${t("run")}</button>`,
 
-About:`
-<div class="logo" style="font-size:38px">S1MPLE<span>.</span></div>
-<p>${t("yourRules")}</p>
-<div class="tile">${t("aboutDescription")}</div>
-<p class="muted">${t("build")}</p>`
-};
+        About:`
+        <div class="logo" style="font-size:38px">S1MPLE<span>.</span></div>
+        <p>${t("yourRules")}</p>
+        <div class="tile">${t("aboutDescription")}</div>
+        <p class="muted">${t("build")}</p>`
+    };
 
-c.innerHTML = pages[name] || "";
+    c.innerHTML = pages[name] || "";
+    if(name === "Settings"){
+        const select = $("languageSelect");
+        select.value = localStorage.getItem("simpleos-language") || "auto";
+    }
+}
+
+async function changeLanguage(code){
+    try{
+        localStorage.setItem("simpleos-language",code);
+    }catch(e){}
+    const actual = code === "auto" ? detectDeviceLanguage() : code;
+    await loadLanguage(actual);
+}
+
+function detectDeviceLanguage(){
+    try{
+        const native = window.S1MPLENative?.getLanguage?.();
+        if(["en","ru","uk"].includes(native)) return native;
+    }catch(e){}
+    const device = navigator.languages?.[0] || navigator.language || "en";
+    const code = device.toLowerCase().split("-")[0];
+    return supportedLanguages.includes(code) ? code : "en";
 }
 
 function closeApp(){
-$("win").style.display = "none";
+    $("win").style.display = "none";
+    currentApp = null;
 }
 
 function searchWeb(){
-const v = $("url").value.trim();
-if(!v)return;
-const u = /^https?:\/\//i.test(v) ? v : "https://www.google.com/search?q="+encodeURIComponent(v);
-const box = $("browserMsg");
-box.textContent = t("browserExternal");
-const a = document.createElement("a");
-a.href = u;
-a.target = "_blank";
-a.rel = "noopener";
-a.textContent = t("continue");
-a.style.color = "#f5b942";
-box.appendChild(a);
+    const input = $("url");
+    if(!input) return;
+    const v = input.value.trim();
+    if(!v)return;
+
+    const u = /^https?:\/\//i.test(v) ? v : "https://www.google.com/search?q="+encodeURIComponent(v);
+    const box = $("browserMsg");
+    box.textContent = t("browserExternal");
+
+    const a = document.createElement("a");
+    a.href = u;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = t("continue");
+    a.style.color = "#f5b942";
+    box.appendChild(a);
 }
 
 function runCmd(){
-const el = $("cmd"),out = $("out");
-if(!el||!out)return;
-const x = el.value.trim();
-let r = {
-help:t("help"),
-whoami:t("whoami"),
-date:new Date().toString(),
-clear:""
-}[x] ?? (t("notFound")+x);
-out.textContent += "\n> "+x+(x==="clear"?"":"\n"+r);
-el.value = "";
+    const el = $("cmd"),out = $("out");
+    if(!el||!out)return;
+
+    const x = el.value.trim();
+    let r = {
+        help:t("help"),
+        whoami:t("whoami"),
+        date:new Date().toLocaleString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-US"),
+        clear:""
+    }[x] ?? (t("notFound")+x);
+
+    if(x === "clear"){
+        out.textContent = "";
+    }else{
+        out.textContent += "\n> "+x+"\n"+r;
+    }
+    el.value = "";
 }
+
+init();
 </script>
 </body>
-  </html>
-  
+</html>
