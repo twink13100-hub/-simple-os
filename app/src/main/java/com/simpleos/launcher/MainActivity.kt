@@ -8,6 +8,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import org.json.JSONObject
 
 class MainActivity : Activity() {
 
@@ -21,16 +22,35 @@ class MainActivity : Activity() {
 
         return when {
             appName.endsWith(" RU") -> "ru"
-            appName.endsWith(" UA") -> "ua"
+            appName.endsWith(" UA") -> "uk"
             appName.endsWith(" EN") -> "en"
             else -> "en"
         }
     }
 
     inner class LanguageBridge {
+
         @JavascriptInterface
         fun getLanguage(): String {
             return getSystemLanguage()
+        }
+
+        @JavascriptInterface
+        fun getTranslations(code: String): String {
+            val language = when (code) {
+                "ru", "uk", "en" -> code
+                else -> "en"
+            }
+
+            return try {
+                assets.open("languages/$language.json")
+                    .bufferedReader(Charsets.UTF_8)
+                    .use { it.readText() }
+            } catch (e: Exception) {
+                assets.open("languages/en.json")
+                    .bufferedReader(Charsets.UTF_8)
+                    .use { it.readText() }
+            }
         }
     }
 
@@ -52,8 +72,10 @@ class MainActivity : Activity() {
         enableFullscreen()
 
         web = WebView(this)
+
         web.settings.javaScriptEnabled = true
         web.settings.domStorageEnabled = true
+        web.settings.allowFileAccess = true
 
         web.addJavascriptInterface(LanguageBridge(), "S1MPLENative")
 
@@ -61,6 +83,7 @@ class MainActivity : Activity() {
         web.webChromeClient = WebChromeClient()
 
         setContentView(web)
+
         web.loadUrl("file:///android_asset/index.html")
     }
 
@@ -71,5 +94,15 @@ class MainActivity : Activity() {
         if (hasFocus) {
             enableFullscreen()
         }
+    }
+
+    override fun onDestroy() {
+        if (::web.isInitialized) {
+            web.stopLoading()
+            web.removeJavascriptInterface("S1MPLENative")
+            web.destroy()
+        }
+
+        super.onDestroy()
     }
 }
