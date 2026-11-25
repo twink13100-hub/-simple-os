@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,71 +45,126 @@ pre{white-space:pre-wrap;color:#bde6c9;background:#080d15;padding:14px;border-ra
 <body>
 
 <div class="desktop">
-  <div class="brand">S1MPLE OS <span style="color:var(--accent)">/ ALPHA 1.1</span></div>
-  <div class="hero">
-    <div class="logo">S1MPLE<span>.</span></div>
-    <div class="sub" id="slogan">SIMPLE. FAST. YOURS.</div>
-    <div class="clock" id="clock">00:00</div>
-    <div class="date" id="date"></div>
-    <div class="apps">
-      <div class="app" onclick="openApp('Files')"><span class="ico">📁</span><small>Files</small></div>
-      <div class="app" onclick="openApp('Browser')"><span class="ico">🌐</span><small>Browser</small></div>
-      <div class="app" onclick="openApp('Memory')"><span class="ico">🧠</span><small>Memory</small></div>
-      <div class="app" onclick="openApp('Virtual OS')"><span class="ico">💻</span><small>Virtual OS</small></div>
-      <div class="app" onclick="openApp('Recovery')"><span class="ico">🛠️</span><small>Recovery</small></div>
-      <div class="app" onclick="openApp('Settings')"><span class="ico">⚙️</span><small>Settings</small></div>
-      <div class="app" onclick="openApp('Terminal')"><span class="ico">⌨️</span><small>Terminal</small></div>
-      <div class="app" onclick="openApp('About')"><span class="ico">ⓘ</span><small>About</small></div>
-    </div>
+ <div class="brand">S1MPLE OS <span style="color:var(--accent)">/ ALPHA 1.1</span></div>
+ <div class="hero">
+  <div class="logo">S1MPLE<span>.</span></div>
+  <div class="sub" id="slogan">YOUR SPACE. YOUR RULES.</div>
+  <div class="clock" id="clock">00:00</div>
+  <div class="date" id="date"></div>
+  <div class="apps">
+   <div class="app" onclick="openApp('Files')"><span class="ico">📁</span><small id="appFiles">Files</small></div>
+   <div class="app" onclick="openApp('Browser')"><span class="ico">🌐</span><small id="appBrowser">Browser</small></div>
+   <div class="app" onclick="openApp('Memory')"><span class="ico">🧠</span><small>Memory</small></div>
+   <div class="app" onclick="openApp('Virtual OS')"><span class="ico">💻</span><small>Virtual OS</small></div>
+   <div class="app" onclick="openApp('Recovery')"><span class="ico">🛠️</span><small>Recovery</small></div>
+   <div class="app" onclick="openApp('Settings')"><span class="ico">⚙️</span><small id="appSettings">Settings</small></div>
+   <div class="app" onclick="openApp('Terminal')"><span class="ico">⌨️</span><small id="appTerminal">Terminal</small></div>
+   <div class="app" onclick="openApp('About')"><span class="ico">ⓘ</span><small id="appAbout">About</small></div>
   </div>
+ </div>
 </div>
 
 <div class="dock">
-  <button onclick="openApp('Files')">📁</button>
-  <button onclick="openApp('Browser')">🌐</button>
-  <button onclick="openApp('Memory')">🧠</button>
-  <button onclick="openApp('Virtual OS')">💻</button>
-  <button onclick="openApp('Recovery')">🛠️</button>
+ <button onclick="openApp('Files')">📁</button>
+ <button onclick="openApp('Browser')">🌐</button>
+ <button onclick="openApp('Memory')">🧠</button>
+ <button onclick="openApp('Virtual OS')">💻</button>
+ <button onclick="openApp('Recovery')">🛠️</button>
 </div>
 
 <div class="window" id="win">
-  <div class="winhead">
-    <span id="title">App</span>
-    <button class="close" onclick="closeApp()">✕</button>
-  </div>
-  <div class="content" id="content"></div>
+ <div class="winhead">
+  <span id="title">App</span>
+  <button class="close" onclick="closeApp()">✕</button>
+ </div>
+ <div class="content" id="content"></div>
 </div>
 
 <script>
 const $=id=>document.getElementById(id);
+
 let currentApp=null;
 let memoryCache=null;
-
-const labels={
- en:{slogan:"SIMPLE. FAST. YOURS.",browser:"Browser",memory:"Memory",virtual:"Virtual OS",recovery:"Recovery",files:"Files",settings:"Settings",terminal:"Terminal",about:"About"},
- ru:{slogan:"ПРОСТО. БЫСТРО. ТВОЁ.",browser:"Браузер",memory:"Память",virtual:"Виртуальная ОС",recovery:"Восстановление",files:"Файлы",settings:"Настройки",terminal:"Терминал",about:"О системе"},
- uk:{slogan:"ПРОСТО. ШВИДКО. ТВОЄ.",browser:"Браузер",memory:"Пам'ять",virtual:"Віртуальна ОС",recovery:"Відновлення",files:"Файли",settings:"Налаштування",terminal:"Термінал",about:"Про систему"}
-};
 let lang="en";
+let translations={};
 let virtualState;
 
+const supportedLanguages=["en","ru","uk"];
+
 function detectLanguage(){
- try{
-  const saved=localStorage.getItem("simpleos-language");
-  if(saved&&saved!=="auto")return saved;
+ const saved=localStorage.getItem("simpleos-language");
+
+ if(saved&&supportedLanguages.includes(saved))return saved;
+
+ if(saved==="auto"||!saved){
   const native=window.S1MPLENative?.getLanguage?.();
-  if(["ru","uk","en"].includes(native))return native;
- }catch(e){}
- const code=(navigator.language||"en").slice(0,2).toLowerCase();
- return ["ru","uk","en"].includes(code)?code:"en";
+  if(supportedLanguages.includes(native))return native;
+
+  const device=(navigator.language||"en").slice(0,2).toLowerCase();
+  if(supportedLanguages.includes(device))return device;
+ }
+
+ return "en";
 }
-function L(key){return labels[lang]?.[key]||labels.en[key]||key}
+
+/* ЗАГРУЗКА ПЕРЕВОДОВ ИЗ ПАПКИ languages */
+async function loadLanguage(code){
+ if(!supportedLanguages.includes(code))code="en";
+
+ try{
+  const response=await fetch("languages/"+code+".json");
+
+  if(!response.ok)throw new Error("Language file not found");
+
+  const data=await response.json();
+
+  translations=data;
+  lang=code;
+  document.documentElement.lang=code;
+
+ }catch(error){
+  console.error("Translation loading error:",error);
+
+  if(code!=="en"){
+   return loadLanguage("en");
+  }
+
+  translations={};
+  lang="en";
+ }
+
+ updateDesktopLanguage();
+ tick();
+
+ if(currentApp)renderApp();
+}
+
+function T(key,fallback){
+ return translations[key]??fallback??key;
+}
+
+function updateDesktopLanguage(){
+ $("slogan").textContent=T("slogan","YOUR SPACE. YOUR RULES.");
+ $("appFiles").textContent=T("files","Files");
+ $("appBrowser").textContent=T("browser","Browser");
+ $("appSettings").textContent=T("settings","Settings");
+ $("appTerminal").textContent=T("terminal","Terminal");
+ $("appAbout").textContent=T("about","About");
+}
+
 function tick(){
  const d=new Date();
  const locale=lang==="uk"?"uk-UA":lang==="ru"?"ru-RU":"en-US";
- $("clock").textContent=d.toLocaleTimeString(locale,{hour:"2-digit",minute:"2-digit"});
- $("date").textContent=d.toLocaleDateString(locale,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+
+ $("clock").textContent=d.toLocaleTimeString(locale,{
+  hour:"2-digit",minute:"2-digit"
+ });
+
+ $("date").textContent=d.toLocaleDateString(locale,{
+  weekday:"long",day:"numeric",month:"long",year:"numeric"
+ });
 }
+
 function defaultVirtualState(){
  return {
   version:1,
@@ -128,85 +182,127 @@ function defaultVirtualState(){
   snapshots:[]
  };
 }
+
 function loadVirtual(){
  try{
   const saved=window.S1MPLENative?.loadVirtualState?.();
+
   if(saved){
    const parsed=JSON.parse(saved);
    if(Array.isArray(parsed.files))return parsed;
   }
  }catch(e){console.warn(e)}
+
  return defaultVirtualState();
 }
+
 function saveVirtual(){
- try{window.S1MPLENative?.saveVirtualState?.(JSON.stringify(virtualState))}
- catch(e){console.error(e)}
+ try{
+  window.S1MPLENative?.saveVirtualState?.(JSON.stringify(virtualState));
+ }catch(e){console.error(e)}
 }
+
 virtualState=loadVirtual();
 
 function hasFile(name){
  return virtualState.files.some(f=>f.path.endsWith("/"+name));
 }
+
 function virtualHealth(){
  const missing=[];
- ["bootloader.sys","launcher.sys","systemui.sys","settings.sys","browser.sys"].forEach(n=>{
-  if(!hasFile(n))missing.push(n);
- });
+
+ ["bootloader.sys","launcher.sys","systemui.sys","settings.sys","browser.sys"]
+ .forEach(n=>{if(!hasFile(n))missing.push(n)});
+
  return missing;
 }
-function statusFor(file){
- if(file.path.endsWith("launcher.sys")&&!hasFile("launcher.sys"))return "OFF";
- return file.active?"ONLINE":"STOPPED";
-}
+
 function openApp(name){
  currentApp=name;
- $("title").textContent=name==="Virtual OS"?L("virtual"):L(name.toLowerCase());
+ $("title").textContent=appTitle(name);
  $("win").style.display="block";
  renderApp();
 }
-function renderApp(){
- const c=$("content");
- const pages={
- Files:filesPage(),
- Browser:browserPage(),
- Memory:memoryPage(),
- "Virtual OS":virtualPage(),
- Recovery:recoveryPage(),
- Settings:settingsPage(),
- Terminal:terminalPage(),
- About:`<div class="logo" style="font-size:38px">S1MPLE<span>.</span></div><div class="tile">S1MPLE OS Alpha 1.1</div><p class="muted">Android WebView desktop environment with a virtual operating system simulator.</p>`
+
+function appTitle(name){
+ const keys={
+  Files:["files","Files"],
+  Browser:["browser","Browser"],
+  Settings:["settings","Settings"],
+  Terminal:["terminal","Terminal"],
+  About:["about","About"],
+  "Virtual OS":["virtualOS","Virtual OS"],
+  Memory:["memory","Memory"],
+  Recovery:["recovery","Recovery"],
+  "Virtual Explorer":["virtualExplorer","Virtual Explorer"],
+  Processes:["processes","Processes"]
  };
- c.innerHTML=pages[currentApp]||"";
+
+ const item=keys[name];
+ return item?T(item[0],item[1]):name;
 }
+
+function renderApp(){
+ const pages={
+  Files:filesPage(),
+  Browser:browserPage(),
+  Memory:memoryPage(),
+  "Virtual OS":virtualPage(),
+  Recovery:recoveryPage(),
+  Settings:settingsPage(),
+  Terminal:terminalPage(),
+  "Virtual Explorer":explorerPage(),
+  Processes:processesPage(),
+  About:`<div class="logo" style="font-size:38px">S1MPLE<span>.</span></div>
+   <div class="tile">S1MPLE OS Alpha 1.1</div>
+   <p class="muted">${T("aboutDescription","Android desktop environment with a virtual OS simulator.")}</p>`
+ };
+
+ $("content").innerHTML=pages[currentApp]||"";
+ if(currentApp==="Memory")refreshMemory();
+}
+
 function closeApp(){
  $("win").style.display="none";
  currentApp=null;
 }
+
 function filesPage(){
- return `<div class="tile">📁 <b>Documents</b><p class="muted small">Local app folder preview</p></div>
- <div class="tile">🖼️ <b>Pictures</b><p class="muted small">Gallery folder preview</p></div>
- <div class="tile">⬇️ <b>Downloads</b><p class="muted small">Downloaded files</p></div>
- <p class="muted small">This is the S1MPLE OS app file area. Virtual OS files are managed separately.</p>`;
+ return `
+ <div class="tile">📁 <b>${T("documents","Documents")}</b>
+ <p class="muted small">${T("folder","Folder")}</p></div>
+ <div class="tile">🖼️ <b>${T("pictures","Pictures")}</b></div>
+ <div class="tile">⬇️ <b>${T("downloads","Downloads")}</b></div>
+ <p class="muted small">${T("fileDemo","Local demo file manager.")}</p>`;
 }
+
 function browserPage(){
- return `<div class="tile"><b>🌐 S1MPLE Browser</b><p class="muted">Websites open in an in-app browser window.</p></div>
- <input id="browserUrl" placeholder="Enter website or search">
- <button class="action" onclick="goBrowser()">Open website</button>
- <p class="muted small">The browser has Back, Forward, Reload, External and Close controls.</p>`;
+ return `
+ <div class="tile"><b>🌐 ${T("browserPreview","S1MPLE Browser")}</b></div>
+ <input id="browserUrl" placeholder="${T("searchPlaceholder","Search or enter address")}">
+ <button class="action" onclick="goBrowser()">${T("open","Open")}</button>
+ <p class="muted small">${T("browserHint","Enter a website address or search phrase.")}</p>`;
 }
+
 function goBrowser(){
  const value=$("browserUrl")?.value.trim();
  if(!value)return;
  window.S1MPLENative?.openBrowser?.(value);
 }
+
 function memoryPage(){
- return `<div class="tile"><b>Android physical memory</b><p class="muted small">Live device statistics</p>
+ return `
+ <div class="tile"><b>Android physical memory</b>
+ <p class="muted small">Live device statistics</p>
  <div id="ramInfo">Loading...</div></div>
  <div class="tile"><b>App storage</b><div id="storageInfo">Loading...</div></div>
  <button class="action" onclick="refreshMemory()">Refresh</button>
- <div class="tile"><b>Virtual memory</b><p class="muted">Virtual OS simulation, separate from Android RAM.</p>
- <div>Virtual RAM limit: 4 GB</div><div>Virtual disk limit: 32 GB</div></div>`;
+ <div class="tile"><b>Virtual memory</b>
+ <p class="muted">Virtual OS simulation, separate from Android RAM.</p>
+ <div>Virtual RAM limit: 4 GB</div>
+ <div>Virtual disk limit: 32 GB</div></div>`;
 }
+
 function formatBytes(n){
  if(!Number.isFinite(n))return "Unknown";
  const units=["B","KB","MB","GB","TB"];
@@ -214,72 +310,120 @@ function formatBytes(n){
  while(n>=1024&&i<units.length-1){n/=1024;i++}
  return n.toFixed(2)+" "+units[i];
 }
+
 function refreshMemory(){
  try{
   memoryCache=JSON.parse(window.S1MPLENative.getMemoryInfo());
   const m=memoryCache;
   const used=m.totalRam-m.availableRam;
+
   $("ramInfo").innerHTML=`<b>${formatBytes(used)}</b> used / ${formatBytes(m.totalRam)} total
    <div class="progress"><div style="width:${Math.min(100,used/m.totalRam*100)}%"></div></div>
    <span class="muted small">${formatBytes(m.availableRam)} available</span>`;
+
   $("storageInfo").innerHTML=`<b>${formatBytes(m.storageUsed)}</b> used / ${formatBytes(m.storageTotal)} total
    <div class="progress"><div style="width:${Math.min(100,m.storageUsed/m.storageTotal*100)}%"></div></div>
    <span class="muted small">${formatBytes(m.storageFree)} free</span>`;
+
  }catch(e){
   $("ramInfo").textContent="Android memory bridge unavailable.";
   $("storageInfo").textContent="Storage information unavailable.";
  }
 }
+
 function virtualPage(){
  const missing=virtualHealth();
  const bootOK=hasFile("bootloader.sys");
  const launcherOK=hasFile("launcher.sys");
  const uiOK=hasFile("systemui.sys");
- const state=!bootOK?"BOOT FAILURE":!launcherOK?"NO DESKTOP":!uiOK?"UI FAILURE":missing.length?"DEGRADED":"RUNNING";
+
+ const state=!bootOK?"BOOT FAILURE":
+  !launcherOK?"NO DESKTOP":
+  !uiOK?"UI FAILURE":
+  missing.length?"DEGRADED":"RUNNING";
+
  const color=state==="RUNNING"?"#8bd5a6":"#ff7777";
- return `<div class="tile"><b>S1MPLE Virtual OS</b><span class="status" style="color:${color}">${state}</span>
+
+ return `
+ <div class="tile"><b>S1MPLE Virtual OS</b>
+ <span class="status" style="color:${color}">${state}</span>
  <p class="muted small">Independent virtual file system. Changes are saved on this device.</p>
  <div>Virtual RAM: 4 GB</div><div>Virtual disk: 32 GB</div></div>
- ${!bootOK?`<div class="tile" style="color:#ff7777"><b>BOOT FAILURE</b><p>Virtual bootloader is missing. The virtual OS cannot start.</p></div>`:""}
- ${!launcherOK?`<div class="tile" style="color:#ff7777"><b>DESKTOP NOT FOUND</b><p>launcher.sys is missing. The virtual system has no desktop.</p></div>`:""}
- ${!uiOK?`<div class="tile" style="color:#ff7777"><b>INTERFACE FAILURE</b><p>systemui.sys is missing. The virtual status interface is unavailable.</p></div>`:""}
+
+ ${!bootOK?`<div class="tile" style="color:#ff7777"><b>BOOT FAILURE</b><p>Virtual bootloader is missing.</p></div>`:""}
+ ${!launcherOK?`<div class="tile" style="color:#ff7777"><b>DESKTOP NOT FOUND</b><p>launcher.sys is missing.</p></div>`:""}
+ ${!uiOK?`<div class="tile" style="color:#ff7777"><b>INTERFACE FAILURE</b><p>systemui.sys is missing.</p></div>`:""}
+
  <button class="action" onclick="openApp('Virtual Explorer')">Open Virtual Explorer</button>
  <button class="action secondary" onclick="openApp('Processes')">Processes</button>
  <button class="action secondary" onclick="virtualReboot()">Reboot virtual OS</button>
- <div class="tile"><b>System diagnostics</b><p class="small muted">${missing.length?("Missing: "+missing.join(", ")):"All required system files found."}</p></div>`;
+
+ <div class="tile"><b>System diagnostics</b>
+ <p class="small muted">${missing.length?"Missing: "+missing.join(", "):"All required system files found."}</p></div>`;
 }
+
 function explorerPage(){
- let rows=virtualState.files.map(f=>`<div class="tile file"><span>${f.type==="system"?"⚙️":f.type==="service"?"🔌":"📄"}</span><div style="min-width:0;overflow-wrap:anywhere"><b>${escapeHTML(f.path.split("/").pop())}</b><div class="muted small">${escapeHTML(f.path)} · ${f.size} KB</div></div><button class="action danger" onclick="deleteVirtualFile('${f.id}')">Delete</button></div>`).join("");
- return `<div class="tile"><b>Virtual Explorer</b><p class="muted small">Deleting system files changes the virtual OS state.</p></div>
+ const rows=virtualState.files.map(f=>`
+ <div class="tile file">
+ <span>${f.type==="system"?"⚙️":f.type==="service"?"🔌":"📄"}</span>
+ <div style="min-width:0;overflow-wrap:anywhere">
+ <b>${escapeHTML(f.path.split("/").pop())}</b>
+ <div class="muted small">${escapeHTML(f.path)} · ${f.size} KB</div>
+ </div>
+ <button class="action danger" onclick="deleteVirtualFile('${f.id}')">Delete</button>
+ </div>`).join("");
+
+ return `
+ <div class="tile"><b>Virtual Explorer</b>
+ <p class="muted small">Deleting system files changes the virtual OS state.</p></div>
  <input id="newFileName" placeholder="New filename, e.g. notes.txt">
  <button class="action" onclick="createVirtualFile()">Create file</button>
  ${rows||"<div class='tile'>No files found.</div>"}`;
 }
+
 function escapeHTML(s){
- return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ return String(s).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
 }
+
 function deleteVirtualFile(id){
  const file=virtualState.files.find(f=>f.id===id);
  if(!file)return;
+
  if(!confirm("Delete "+file.path+" from the virtual system?"))return;
+
  virtualState.files=virtualState.files.filter(f=>f.id!==id);
  saveVirtual();
  renderApp();
 }
+
 function createVirtualFile(){
  const input=$("newFileName");
  const name=input?.value.trim();
+
  if(!name)return;
+
  if(name.includes("/")||name.includes("\\")||name==="."||name===".."){
   alert("Enter a filename, not a path.");
   return;
  }
- virtualState.files.push({id:"user-"+Date.now(),path:"/documents/"+name,type:"user",size:1,active:true});
+
+ virtualState.files.push({
+  id:"user-"+Date.now(),
+  path:"/documents/"+name,
+  type:"user",
+  size:1,
+  active:true
+ });
+
  saveVirtual();
  renderApp();
 }
+
 function virtualReboot(){
  const missing=virtualHealth();
+
  if(!hasFile("bootloader.sys")){
   alert("BOOT FAILURE: bootloader.sys is missing. Open Recovery to repair the virtual OS.");
  }else if(!hasFile("launcher.sys")){
@@ -290,97 +434,147 @@ function virtualReboot(){
   alert(missing.length?"Virtual OS started with errors.":"Virtual OS booted successfully.");
  }
 }
+
 function processesPage(){
  const services=[
-  ["Launcher","launcher.sys"],["System UI","systemui.sys"],["Settings","settings.sys"],
-  ["Browser","browser.sys"],["Audio service","audio.service"],["Network service","network.service"]
+  ["Launcher","launcher.sys"],
+  ["System UI","systemui.sys"],
+  ["Settings","settings.sys"],
+  ["Browser","browser.sys"],
+  ["Audio service","audio.service"],
+  ["Network service","network.service"]
  ];
- return `<div class="tile"><b>Virtual processes</b><p class="muted small">A service is available only while its virtual file exists.</p></div>`+
- services.map(([label,file])=>`<div class="tile">${label}<span class="status" style="color:${hasFile(file)?"#8bd5a6":"#ff7777"}">${hasFile(file)?"RUNNING":"MISSING"}</span></div>`).join("");
+
+ return `<div class="tile"><b>Virtual processes</b>
+ <p class="muted small">A service is available only while its virtual file exists.</p></div>`+
+ services.map(([label,file])=>`
+ <div class="tile">${label}
+ <span class="status" style="color:${hasFile(file)?"#8bd5a6":"#ff7777"}">
+ ${hasFile(file)?"RUNNING":"MISSING"}</span></div>`).join("");
 }
+
 function recoveryPage(){
  const missing=virtualHealth();
- return `<div class="tile"><b>🛠️ S1MPLE Recovery</b><p class="muted">Recovery only repairs the simulated Virtual OS.</p>
- <p style="color:${missing.length?"#ff7777":"#8bd5a6"}">${missing.length?missing.length+" required component(s) missing":"Virtual system looks healthy."}</p></div>
+
+ return `
+ <div class="tile"><b>🛠️ S1MPLE Recovery</b>
+ <p class="muted">Recovery only repairs the simulated Virtual OS.</p>
+ <p style="color:${missing.length?"#ff7777":"#8bd5a6"}">
+ ${missing.length?missing.length+" required component(s) missing":"Virtual system looks healthy."}
+ </p></div>
+
  <button class="action" onclick="repairVirtual()">Repair missing system files</button>
  <button class="action secondary" onclick="makeSnapshot()">Create restore point</button>
  <button class="action secondary" onclick="restoreSnapshot()">Restore last point</button>
  <button class="action danger" onclick="factoryVirtual()">Factory reset Virtual OS</button>
- <p class="muted small">Factory reset deletes virtual files and restores the default virtual system. It does not reset Android or erase personal phone files.</p>`;
+
+ <p class="muted small">Factory reset affects only the simulated Virtual OS.</p>`;
 }
+
 function repairVirtual(){
  const defaults=defaultVirtualState().files;
+
  defaults.forEach(f=>{
-  if(["bootloader.sys","launcher.sys","systemui.sys","settings.sys","browser.sys"].some(n=>f.path.endsWith(n))&&!hasFile(f.path.split("/").pop())){
+  if(["bootloader.sys","launcher.sys","systemui.sys","settings.sys","browser.sys"]
+   .some(n=>f.path.endsWith(n))&&!hasFile(f.path.split("/").pop())){
    virtualState.files.push(f);
   }
  });
+
  saveVirtual();
  renderApp();
  alert("Recovery repair completed.");
 }
+
 function makeSnapshot(){
  virtualState.snapshots=virtualState.snapshots||[];
  virtualState.snapshots.push(JSON.stringify(virtualState.files));
+
  if(virtualState.snapshots.length>5)virtualState.snapshots.shift();
+
  saveVirtual();
  alert("Restore point saved.");
 }
+
 function restoreSnapshot(){
  const snapshots=virtualState.snapshots||[];
- if(!snapshots.length){alert("No restore point available.");return}
+
+ if(!snapshots.length){
+  alert("No restore point available.");
+  return;
+ }
+
  if(!confirm("Restore the latest saved virtual system state?"))return;
+
  virtualState.files=JSON.parse(snapshots[snapshots.length-1]);
  saveVirtual();
  renderApp();
 }
+
 function factoryVirtual(){
  if(!confirm("Reset the Virtual OS to its original state?"))return;
+
  virtualState=defaultVirtualState();
  saveVirtual();
  renderApp();
 }
+
+/* НАСТРОЙКИ ЯЗЫКА */
 function settingsPage(){
- return `<div class="tile"><b>Appearance</b><p class="muted">Dark theme · Gold accent</p></div>
- <div class="tile"><b>Language</b><select id="languageSelect" onchange="changeLanguage(this.value)">
- <option value="auto">System default</option><option value="en">English</option><option value="ru">Русский</option><option value="uk">Українська</option></select></div>
- <div class="tile"><b>Version</b><p class="muted">S1MPLE OS Alpha 1.1</p></div>`;
+ const saved=localStorage.getItem("simpleos-language")||"auto";
+
+ return `
+ <div class="tile">
+ <b>${T("appearance","Appearance")}</b>
+ <p class="muted">${T("dark","Dark theme")} · ${T("accent","Accent color")}: ${T("gold","Gold")}</p>
+ </div>
+
+ <div class="tile">
+ <b>${T("language","System language")}</b>
+
+ <select id="languageSelect" onchange="changeLanguage(this.value)">
+  <option value="auto" ${saved==="auto"?"selected":""}>${T("autoLanguage","Automatic")}</option>
+  <option value="en" ${saved==="en"?"selected":""}>English</option>
+  <option value="ru" ${saved==="ru"?"selected":""}>Русский</option>
+  <option value="uk" ${saved==="uk"?"selected":""}>Українська</option>
+ </select>
+ </div>
+
+ <div class="tile">
+ <b>${T("version","Version")}</b>
+ <p class="muted">S1MPLE OS Alpha 1.1</p>
+ </div>`;
 }
-function changeLanguage(code){
+
+async function changeLanguage(code){
+ if(code!=="auto"&&!supportedLanguages.includes(code))return;
+
  localStorage.setItem("simpleos-language",code);
- lang=code==="auto"?detectLanguage():code;
- $("slogan").textContent=L("slogan");
- tick();
- if(currentApp)renderApp();
+
+ const selected=code==="auto"?detectLanguage():code;
+
+ await loadLanguage(selected);
 }
+
 function terminalPage(){
- return `<p class="muted">S1MPLE virtual shell</p><pre id="terminalOutput">S1MPLE OS [Version 1.1]\nType help for commands.</pre>
- <input id="terminalInput" placeholder="Enter command" onkeydown="if(event.key==='Enter')runTerminal()">
- <button class="action" onclick="runTerminal()">Run</button>`;
+ return `
+ <p class="muted">${T("shell","S1MPLE virtual shell")}</p>
+ <pre id="terminalOutput">${T("terminalStart","S1MPLE OS [Version 1.1]\nType help for commands.")}</pre>
+ <input id="terminalInput" placeholder="${T("commandPlaceholder","Enter command")}"
+ onkeydown="if(event.key==='Enter')runTerminal()">
+ <button class="action" onclick="runTerminal()">${T("run","Run")}</button>`;
 }
+
 function runTerminal(){
- const input=$("terminalInput"),out=$("terminalOutput");
+ const input=$("terminalInput");
+ const out=$("terminalOutput");
+
  if(!input||!out)return;
+
  const cmd=input.value.trim();
  let result="";
- if(cmd==="help")result="help, date, whoami, ls, status, reboot";
+
+ if(cmd==="help")result=T("help","help, date, whoami, ls, status, reboot");
  else if(cmd==="date")result=new Date().toString();
- else if(cmd==="whoami")result="simpleos-user";
- else if(cmd==="ls")result=virtualState.files.map(f=>f.path).join("\n");
- else if(cmd==="status")result="Virtual OS: "+(virtualHealth().length?"DEGRADED":"RUNNING");
- else if(cmd==="reboot")result="Use Virtual OS > Reboot virtual OS.";
- else if(cmd==="clear"){out.textContent="";input.value="";return}
- else result="Command not found: "+cmd;
- out.textContent+="\n> "+cmd+"\n"+result;
- input.value="";
-}
-function init(){
- lang=detectLanguage();
- $("slogan").textContent=L("slogan");
- tick();
- setInterval(tick,1000);
-}
-init();
-</script>
-</body>
-</html>
+ else if(cmd==="whoami")result=T("whoami","simpleos-user");
+ else if(cmd==="ls")result=virtualState.fi
