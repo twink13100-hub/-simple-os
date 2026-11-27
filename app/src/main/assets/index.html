@@ -92,7 +92,8 @@ let virtualState;
 const supportedLanguages=["en","ru","uk"];
 
 function detectLanguage(){
- const saved=localStorage.getItem("simpleos-language");
+ let saved=null;
+ try{saved=localStorage.getItem("simpleos-language")}catch(e){}
 
  if(saved&&supportedLanguages.includes(saved))return saved;
 
@@ -107,16 +108,20 @@ function detectLanguage(){
  return "en";
 }
 
-/* ЗАГРУЗКА ПЕРЕВОДОВ ИЗ ПАПКИ languages */
+/* ЗАГРУЗКА ПЕРЕВОДОВ: сначала через Android-мост, запасной вариант fetch */
 async function loadLanguage(code){
  if(!supportedLanguages.includes(code))code="en";
 
  try{
-  const response=await fetch("languages/"+code+".json");
+  let data=null;
+  const raw=window.S1MPLENative?.getTranslations?.(code);
+  if(raw)data=JSON.parse(raw);
 
-  if(!response.ok)throw new Error("Language file not found");
-
-  const data=await response.json();
+  if(!data||!Object.keys(data).length){
+   const response=await fetch("languages/"+code+".json");
+   if(!response.ok)throw new Error("Language file not found");
+   data=await response.json();
+  }
 
   translations=data;
   lang=code;
@@ -242,24 +247,31 @@ function appTitle(name){
  return item?T(item[0],item[1]):name;
 }
 
+/* Страницы строятся лениво: сбой одной не ломает остальные */
 function renderApp(){
  const pages={
-  Files:filesPage(),
-  Browser:browserPage(),
-  Memory:memoryPage(),
-  "Virtual OS":virtualPage(),
-  Recovery:recoveryPage(),
-  Settings:settingsPage(),
-  Terminal:terminalPage(),
-  "Virtual Explorer":explorerPage(),
-  Processes:processesPage(),
-  About:`<div class="logo" style="font-size:38px">S1MPLE<span>.</span></div>
+  Files:filesPage,
+  Browser:browserPage,
+  Memory:memoryPage,
+  "Virtual OS":virtualPage,
+  Recovery:recoveryPage,
+  Settings:settingsPage,
+  Terminal:terminalPage,
+  "Virtual Explorer":explorerPage,
+  Processes:processesPage,
+  About:()=>`<div class="logo" style="font-size:38px">S1MPLE<span>.</span></div>
    <div class="tile">S1MPLE OS Alpha 1.1</div>
    <p class="muted">${T("aboutDescription","Android desktop environment with a virtual OS simulator.")}</p>`
  };
 
- $("content").innerHTML=pages[currentApp]||"";
- if(currentApp==="Memory")refreshMemory();
+ try{
+  const build=pages[currentApp];
+  $("content").innerHTML=build?build():"";
+  if(currentApp==="Memory")refreshMemory();
+ }catch(e){
+  console.error("Render error:",e);
+  $("content").innerHTML=`<div class="tile" style="color:#ff7777">Error: ${escapeHTML(e.message)}</div>`;
+ }
 }
 
 function closeApp(){
@@ -521,7 +533,8 @@ function factoryVirtual(){
 
 /* НАСТРОЙКИ ЯЗЫКА */
 function settingsPage(){
- const saved=localStorage.getItem("simpleos-language")||"auto";
+ let saved="auto";
+ try{saved=localStorage.getItem("simpleos-language")||"auto"}catch(e){}
 
  return `
  <div class="tile">
@@ -549,7 +562,7 @@ function settingsPage(){
 async function changeLanguage(code){
  if(code!=="auto"&&!supportedLanguages.includes(code))return;
 
- localStorage.setItem("simpleos-language",code);
+ try{localStorage.setItem("simpleos-language",code)}catch(e){}
 
  const selected=code==="auto"?detectLanguage():code;
 
@@ -561,20 +574,4 @@ function terminalPage(){
  <p class="muted">${T("shell","S1MPLE virtual shell")}</p>
  <pre id="terminalOutput">${T("terminalStart","S1MPLE OS [Version 1.1]\nType help for commands.")}</pre>
  <input id="terminalInput" placeholder="${T("commandPlaceholder","Enter command")}"
- onkeydown="if(event.key==='Enter')runTerminal()">
- <button class="action" onclick="runTerminal()">${T("run","Run")}</button>`;
-}
-
-function runTerminal(){
- const input=$("terminalInput");
- const out=$("terminalOutput");
-
- if(!input||!out)return;
-
- const cmd=input.value.trim();
- let result="";
-
- if(cmd==="help")result=T("help","help, date, whoami, ls, status, reboot");
- else if(cmd==="date")result=new Date().toString();
- else if(cmd==="whoami")result=T("whoami","simpleos-user");
- else if(cmd==="ls")result=virtualState.fi
+ onkeydown="if(event.key==='Enter')run
